@@ -9,9 +9,11 @@ export interface CartItemProps {
 const initialItemsState: {
     cartItems: CartItemProps[];
     whishList: Item[];
+    bestSelling: Item[];
 } = {
     cartItems: [],
     whishList: [],
+    bestSelling: [],
 };
 
 export const itemsSlice = createSlice({
@@ -23,6 +25,9 @@ export const itemsSlice = createSlice({
         },
         setWhishList(state, action) {
             state.whishList = action.payload;
+        },
+        setBestSelling(state, action) {
+            state.bestSelling = action.payload;
         },
     },
 });

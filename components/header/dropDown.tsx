@@ -35,21 +35,23 @@ const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
             top={"7rem"}
             right={20}
             px={{ xs: 2 }}
+            zIndex={9}
         >
-            <Box
-                component="div"
-                onClick={() => {
-                    setDropDownContents("");
-                }}
-                sx={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100vw",
-                    height: "100vh",
-                    zIndex: isOpen ? 10 : -10,
-                }}
-            />
+            {isOpen && (
+                <Box
+                    component="div"
+                    onClick={() => {
+                        setDropDownContents("");
+                    }}
+                    sx={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                    }}
+                />
+            )}
 
             {contents === "menu" ? (
                 <MenuContents />

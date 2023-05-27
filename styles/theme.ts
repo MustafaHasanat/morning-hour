@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
     typography: {
-        fontFamily: "Georgia, 'Times New Roman', Times, serif",
+        fontFamily: "'Patua One', cursive",
     },
 
     palette: {
@@ -14,9 +14,11 @@ const theme = createTheme({
         },
         background: {
             default: "#f8f4f1",
+            paper: "#e4e0dd",
         },
         text: {
             primary: "#55473F",
+            secondary: "white",
         },
     },
 
