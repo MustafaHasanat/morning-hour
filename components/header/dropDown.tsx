@@ -1,9 +1,10 @@
 import theme from "@/styles/theme";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { motion } from "framer-motion";
 import MenuContents from "./menuContents";
 import CartContents from "./cartContents";
-import zIndex from "@mui/material/styles/zIndex";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 interface DropDownProps {
     isOpen: boolean;
@@ -14,6 +15,12 @@ interface DropDownProps {
 }
 
 const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        setDropDownContents("");
+    }, [setDropDownContents, router.asPath]);
+
     return (
         <Stack
             component={motion.div}
@@ -28,7 +35,7 @@ const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
                 paddingTop: isOpen ? "20px" : "0px",
             }}
             position="absolute"
-            width={{ xs: "15rem" }}
+            width={{ xs: "20rem" }}
             bgcolor="background.default"
             overflow="hidden"
             borderRadius={1}
@@ -37,26 +44,10 @@ const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
             px={{ xs: 2 }}
             zIndex={9}
         >
-            {isOpen && (
-                <Box
-                    component="div"
-                    onClick={() => {
-                        setDropDownContents("");
-                    }}
-                    sx={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100vw",
-                        height: "100vh",
-                    }}
-                />
-            )}
-
             {contents === "menu" ? (
                 <MenuContents />
             ) : contents === "cart" ? (
-                <CartContents />
+                <CartContents setDropDownContents={setDropDownContents} />
             ) : null}
         </Stack>
     );

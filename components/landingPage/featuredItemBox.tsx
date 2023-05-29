@@ -20,6 +20,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
             alignItems={{ xs: "end" }}
             height={{ xs: "55vh" }}
             overflow="hidden"
+            boxShadow={`10px 10px 20px 1px ${theme.palette.primary.main}`}
         >
             <Stack
                 width={{ xs: "60%", height: "100%" }}
@@ -88,6 +89,28 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                 </Typography>
                 <Typography textAlign="right">{item.description}</Typography>
             </Stack>
+
+            <Box
+                component={motion.div}
+                initial={{ x: "-50%", width: "20px", rotateX: 84 }}
+                animate={{
+                    width: ["20px", "80px", "20px"],
+                }}
+                transition={{
+                    duration: 4,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                }}
+                sx={{
+                    position: "absolute",
+                    height: "70px",
+                    bottom: "0px",
+                    left: "50%",
+                    bgcolor: "secondary.main",
+                    borderRadius: "100%",
+                    boxShadow: `0px 0px 25px 30px ${theme.palette.secondary.main}`,
+                }}
+            />
 
             <Box
                 component={motion.div}

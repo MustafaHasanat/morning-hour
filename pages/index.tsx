@@ -1,6 +1,5 @@
 import AllItemsBox from "@/components/landingPage/allItemsBox";
 import FeaturedItemBox from "@/components/landingPage/featuredItemBox";
-import SearchBox from "@/components/landingPage/searchBox";
 import BestSellingBox from "@/components/shared/bestSellingBox";
 import { Item } from "@/types/item";
 import { getAllItems, getItemById } from "@/utils/sanity/item";
@@ -45,8 +44,7 @@ export default function Home({ items, featuredItem }: HomeProps) {
     return (
         <Stack>
             <FeaturedItemBox item={featuredItem} />
-            <BestSellingBox />
-            <SearchBox />
+            {/* <BestSellingBox /> */}
             <AllItemsBox items={items} />
         </Stack>
     );

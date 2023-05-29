@@ -7,7 +7,6 @@ html,
 
 div::-webkit-scrollbar {
     display: none;
-    color: #e4e0dd;
 }
 
 * {
