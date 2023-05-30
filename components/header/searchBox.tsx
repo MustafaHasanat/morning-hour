@@ -68,7 +68,12 @@ const SearchBox = ({}: SearchBoxProps) => {
                 }
                 iconOnClick={() => {
                     setIsOpened((prev) => {
-                        if (!prev) inputRef?.current?.focus();
+                        if (!prev) {
+                            inputRef?.current?.focus();
+                            document.getElementById("best-selling-section")?.scrollIntoView({
+                                behavior: "smooth",
+                            });
+                        }
                         return !prev;
                     });
                 }}

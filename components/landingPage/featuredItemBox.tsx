@@ -33,7 +33,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                         fontSize={{ xs: "1.8rem" }}
                         textTransform="capitalize"
                     >
-                        best selling book
+                        book of the morning
                     </Typography>
                     <Typography
                         color="text.secondary"
