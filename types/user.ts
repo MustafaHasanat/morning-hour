@@ -9,7 +9,7 @@ export type User = {
     password: string;
     recentVisited: Item[];
     whishList: Item[];
-    // cart: Item[];
+    cart: Item[];
     orders: Order[];
     address: string;
     isAdmin: boolean;

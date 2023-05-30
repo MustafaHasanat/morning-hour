@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import DropDown from "./dropDown";
 import Navbar from "./navbar";
 import ButtonsSet from "./buttonsSet";
+import SearchBox from "./searchBox";
+import Link from "next/link";
 
 // TODO: replace the burger button with the user avatar if signed-in
 
@@ -15,33 +17,49 @@ const Header = () => {
     return (
         <Stack
             component="header"
-            direction="row"
             position="relative"
-            bgcolor="background.default"
             height={{ xs: "6rem" }}
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`1px solid ${theme.palette.primary.main}`}
-            px={{ xs: 5 }}
+            boxShadow={`0px -5px 20px 1px ${theme.palette.primary.main}`}
         >
-            <DropDown
-                isOpen={dropDownContents !== ""}
-                contents={dropDownContents}
-                setDropDownContents={setDropDownContents}
-            />
+            <Stack
+                direction="row"
+                position="fixed"
+                bgcolor="background.default"
+                width={{ xs: "100vw" }}
+                height={{ xs: "6rem" }}
+                justifyContent="space-between"
+                alignItems="center"
+                boxShadow={`0px -5px 20px 1px ${theme.palette.primary.main}`}
+                px={{ xs: 5 }}
+                zIndex={10}
+            >
+                <DropDown
+                    isOpen={dropDownContents !== ""}
+                    contents={dropDownContents}
+                    setDropDownContents={setDropDownContents}
+                />
 
-            <Avatar
-                src="/logo.png"
-                alt="main logo"
-                variant="rounded"
-                sx={{
-                    height: "5.5rem",
-                    width: "auto",
-                }}
-            />
+                <Stack direction="row" spacing={5} alignItems="center">
+                    <Link href="/">
+                        <Avatar
+                            src="/logo.png"
+                            alt="main logo"
+                            variant="rounded"
+                            sx={{
+                                height: "5.5rem",
+                                width: "auto",
+                            }}
+                        />
+                    </Link>
 
-            <Navbar />
-            <ButtonsSet setDropDownContents={setDropDownContents} />
+                    <SearchBox />
+                </Stack>
+
+                <Stack direction="row" spacing={10} alignItems="center">
+                    <Navbar />
+                    <ButtonsSet setDropDownContents={setDropDownContents} />
+                </Stack>
+            </Stack>
         </Stack>
     );
 };

@@ -1,18 +1,31 @@
 import { Button, List, Stack, Typography } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import MiniCard from "../shared/miniCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { itemsActions } from "@/utils/store";
 
-const CartContents = () => {
+interface CartContentsProps {
+    setDropDownContents: Dispatch<SetStateAction<"" | "menu" | "cart">>;
+}
+
+const CartContents = ({ setDropDownContents }: CartContentsProps) => {
     const [totalPrice, setTotalPrice] = useState(0);
-    
+
+    const dispatch = useDispatch();
     const cartItems = useSelector(
         (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
             state.itemsReducer.cartItems
     );
+
+    const handleClearButton = () => {
+        dispatch(itemsActions.setCartItems([]));
+        setTimeout(() => {
+            setDropDownContents("");
+        }, 400);
+    };
 
     useEffect(() => {
         setTotalPrice(
@@ -32,7 +45,7 @@ const CartContents = () => {
                         <Fragment
                             key={`cart mini cards header container number ${index}`}
                         >
-                            <MiniCard item={item} />
+                            <MiniCard cartItem={item} />
                         </Fragment>
                     );
                 })}
@@ -53,6 +66,7 @@ const CartContents = () => {
                 variant="outlined"
                 endIcon={<DeleteRoundedIcon />}
                 sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
+                onClick={handleClearButton}
             >
                 clear cart
             </Button>
