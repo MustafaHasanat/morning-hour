@@ -11,11 +11,13 @@ const initialItemsState: {
     whishList: Item[];
     bestSelling: Item[];
     searchTerm: string;
+    currentVisitedItem: Item | null;
 } = {
     cartItems: [],
     whishList: [],
     bestSelling: [],
     searchTerm: "",
+    currentVisitedItem: null,
 };
 
 export const itemsSlice = createSlice({
@@ -73,6 +75,10 @@ export const itemsSlice = createSlice({
 
         setSearchTerm(state, action: { payload: string }) {
             state.searchTerm = action.payload;
+        },
+
+        setCurrentVisitedItem(state, action: { payload: Item }) {
+            state.currentVisitedItem = action.payload;
         },
     },
 });

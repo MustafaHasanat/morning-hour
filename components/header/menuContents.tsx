@@ -16,12 +16,14 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CustomDivider from "../shared/customDivider";
+import { useRouter } from "next/router";
 
 // TODO: change the sign-out icon and text depending on the state of the user
 
 const MenuContents = () => {
     const [language, setLanguage] = useState("english");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
 
     return (
         <List
@@ -70,6 +72,7 @@ const MenuContents = () => {
                 variant="contained"
                 endIcon={<FavoriteIcon />}
                 sx={{ my: 2, width: "100%" }}
+                onClick={() => {router.push("/wishlist")}}
             >
                 whish list
             </Button>

@@ -6,6 +6,7 @@ import { CartItemProps } from "@/utils/store/itemsSlice";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { itemsActions } from "@/utils/store";
+import getTotalPrice from "@/utils/helpers/getTotalPrice";
 
 interface CartContentsProps {
     setDropDownContents: Dispatch<SetStateAction<"" | "menu" | "cart">>;
@@ -28,13 +29,8 @@ const CartContents = ({ setDropDownContents }: CartContentsProps) => {
     };
 
     useEffect(() => {
-        setTotalPrice(
-            cartItems.reduce(
-                (partialSum, item) =>
-                    partialSum + item.quantity * item.item.currentPrice,
-                0
-            )
-        );
+        const { totalPrice } = getTotalPrice(cartItems);
+        setTotalPrice(totalPrice);
     }, [cartItems]);
 
     return (

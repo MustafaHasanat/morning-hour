@@ -1,7 +1,10 @@
-import { Avatar, Button, Stack } from "@mui/material";
+import { Avatar, Badge, Button, Stack } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { ReactNode, useState } from "react";
+import { useSelector } from "react-redux";
+import { CartItemProps } from "@/utils/store/itemsSlice";
+import getTotalPrice from "@/utils/helpers/getTotalPrice";
 
 interface ButtonsSetProps {
     setDropDownContents: React.Dispatch<
@@ -12,6 +15,13 @@ interface ButtonsSetProps {
 const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
     const [menuBtn, setMenuBtn] = useState(false);
+
+    const cartItems = useSelector(
+        (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
+            state.itemsReducer.cartItems
+    );
+
+    const { itemsCount } = getTotalPrice(cartItems);
 
     const headerIconWrapper = (
         child: ReactNode,
@@ -39,16 +49,30 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
             alignItems="center"
         >
             {headerIconWrapper(
-                <ShoppingCartRoundedIcon
+                <Badge
                     sx={{
                         color: cartBtnIsHovered
                             ? "primary.main"
                             : "secondary.main",
                         width: "auto",
                         height: "100%",
-                        transition: "0.3s ease"
+                        transition: "0.3s ease",
                     }}
-                />,
+                    badgeContent={itemsCount}
+                    color="error"
+                    invisible={cartItems.length === 0}
+                >
+                    <ShoppingCartRoundedIcon
+                        sx={{
+                            color: cartBtnIsHovered
+                                ? "primary.main"
+                                : "secondary.main",
+                            width: "100%",
+                            height: "100%",
+                            transition: "0.3s ease",
+                        }}
+                    />
+                </Badge>,
                 () => {
                     setCartBtnIsHovered(true);
                 },
