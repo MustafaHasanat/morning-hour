@@ -246,7 +246,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
 
             <Stack
                 component={motion.div}
-                initial={{ rotate: 45, y: -130, x: 130 }}
+                initial={{ rotate: 45, y: -130, x: 140 }}
                 animate={{ rotate: 45, y: isFavorite ? 40 : -130, x: 140 }}
                 sx={{
                     position: "absolute",

@@ -1,8 +1,10 @@
-import { Avatar, Stack } from "@mui/material";
+import { Avatar, Stack, Typography } from "@mui/material";
 import { Item } from "@/types/item";
 import theme from "@/styles/theme";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { CartItemProps } from "@/utils/store/itemsSlice";
 
 interface ImagesFlipperProps {
     item: Item;
@@ -10,11 +12,31 @@ interface ImagesFlipperProps {
 
 const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
     const [sliderShift, setSliderShift] = useState(0);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const imageSize = 23;
     const thumbnailSize = 4;
     const frameSize = 25;
     const imagesSpaceLength = 2;
+
+    const whishList = useSelector(
+        (state: { itemsReducer: { whishList: Item[] } }) =>
+            state.itemsReducer.whishList
+    );
+
+    useEffect(() => {
+        const matchedList = whishList.filter((whishListItem) => {
+            if (whishListItem._id === item._id) {
+                return whishListItem;
+            }
+        });
+
+        if (matchedList.length !== 0) {
+            setIsFavorite(true);
+        } else {
+            setIsFavorite(false);
+        }
+    }, [item._id, whishList]);
 
     const handleThumbnailClick = (index: number) => {
         setSliderShift(index);
@@ -34,7 +56,34 @@ const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
                 overflow="hidden"
                 mb={`${imagesSpaceLength}rem`}
                 border={`1px solid ${theme.palette.primary.main}`}
+                position="relative"
+            >
+                <Stack
+                    component={motion.div}
+                    initial={{ rotate: 45, y: -130, x: 140 }}
+                    animate={{ rotate: 45, y: isFavorite ? 40 : -130, x: 140 }}
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        bgcolor: "secondary.main",
+                        width: "400px",
+                        height: "50px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderTop: `1px solid ${theme.palette.primary.main}`,
+                        borderBottom: `1px solid ${theme.palette.primary.main}`,
+                        zIndex: 1,
+                    }}
                 >
+                    <Typography
+                        textTransform="capitalize"
+                        fontSize={{ xs: "1rem" }}
+                    >
+                        on wishlist{" "}
+                    </Typography>
+                </Stack>
+
                 <Stack
                     id="slider-box"
                     component={motion.div}
@@ -85,7 +134,7 @@ const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
                         <Stack
                             component={motion.div}
                             initial={{
-                                backgroundColor: "transparent",
+                                backgroundColor: "#ffffff",
                             }}
                             whileHover={{
                                 scale: 1.1,

@@ -3,7 +3,7 @@ import { client } from "./client";
 import { groq } from "next-sanity";
 
 export async function getReviewsForItem(itemId: string): Promise<Review[]> {
-    return await client.fetch(groq`*[_type == "review" && item._id == ${itemId}]{
+    return await client.fetch(groq`*[_type == "review" && item._ref == "${itemId}"]{
         _id,
         text,
         rating,

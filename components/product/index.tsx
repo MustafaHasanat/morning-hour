@@ -2,9 +2,15 @@ import { Item } from "@/types/item";
 import { Divider, Stack } from "@mui/material";
 import ImagesFlipper from "./imagesFlipper";
 import DetailsBox from "./detailsBox";
-import ReviewsBox from "./reviewsBox copy";
+import ReviewsBox from "./reviewsBox";
+import { Review } from "@/types/review";
 
-const BookPage = ({ item }: { item: Item }) => {
+interface BookPageProps {
+    item: Item;
+    reviews: Review[];
+}
+
+const BookPage = ({ item, reviews }: BookPageProps) => {
     return (
         <Stack px={{ xs: 10 }} py={{ xs: 10 }} width={{ xs: "100%" }}>
             <Stack
@@ -15,7 +21,7 @@ const BookPage = ({ item }: { item: Item }) => {
                 }}
             >
                 <ImagesFlipper item={item} />
-                <DetailsBox item={item} />
+                <DetailsBox item={item} reviews={reviews} />
             </Stack>
 
             <Divider
@@ -24,7 +30,7 @@ const BookPage = ({ item }: { item: Item }) => {
                 }}
             />
 
-            <ReviewsBox item={item} />
+            <ReviewsBox item={item} reviews={reviews} />
         </Stack>
     );
 };

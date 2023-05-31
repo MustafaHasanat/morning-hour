@@ -17,12 +17,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CustomDivider from "../shared/customDivider";
 import { useRouter } from "next/router";
-
-// TODO: change the sign-out icon and text depending on the state of the user
+import { signOut, useSession } from "next-auth/react";
 
 const MenuContents = () => {
+    const { status } = useSession();
+
     const [language, setLanguage] = useState("english");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
 
     return (
@@ -81,11 +81,15 @@ const MenuContents = () => {
 
             <CustomDivider />
 
-            {isLoggedIn ? (
+            {status === "authenticated" ? (
                 <Button
                     variant="outlined"
                     endIcon={<LogoutIcon />}
-                    sx={{ my: 1, textTransform: "lowercase" }}
+                    sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
+                    onClick={() => {
+                        router.push("/");
+                        signOut();
+                    }}
                 >
                     logout
                 </Button>

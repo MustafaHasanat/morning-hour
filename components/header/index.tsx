@@ -7,8 +7,6 @@ import ButtonsSet from "./buttonsSet";
 import SearchBox from "./searchBox";
 import Link from "next/link";
 
-// TODO: replace the burger button with the user avatar if signed-in
-
 const Header = () => {
     const [dropDownContents, setDropDownContents] = useState<
         "cart" | "menu" | ""
