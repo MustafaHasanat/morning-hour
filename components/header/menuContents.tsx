@@ -72,7 +72,9 @@ const MenuContents = () => {
                 variant="contained"
                 endIcon={<FavoriteIcon />}
                 sx={{ my: 2, width: "100%" }}
-                onClick={() => {router.push("/wishlist")}}
+                onClick={() => {
+                    router.push("/wishlist");
+                }}
             >
                 whish list
             </Button>
@@ -93,6 +95,9 @@ const MenuContents = () => {
                         variant="outlined"
                         endIcon={<LoginIcon />}
                         sx={{ my: 1, textTransform: "lowercase" }}
+                        onClick={() => {
+                            router.push("/account/login");
+                        }}
                     >
                         login
                     </Button>
@@ -101,6 +106,9 @@ const MenuContents = () => {
                         variant="outlined"
                         endIcon={<PersonAddAltIcon />}
                         sx={{ my: 1, textTransform: "lowercase" }}
+                        onClick={() => {
+                            router.push("/account/signup");
+                        }}
                     >
                         sign-up
                     </Button>

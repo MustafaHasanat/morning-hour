@@ -1,10 +1,12 @@
-import WishlistPage from "@/components/wishlistPage";
+import YouMayAlsoLike from "@/components/shared/youMayAlsoLike";
+import WishlistBox from "@/components/wishlistPage";
 import { Stack } from "@mui/material";
 
 export default function Wishlist() {
     return (
-        <Stack>
-            <WishlistPage />
+        <Stack alignItems="center">
+            <WishlistBox />
+            <YouMayAlsoLike />
         </Stack>
     );
 }

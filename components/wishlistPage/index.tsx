@@ -8,7 +8,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { itemsActions } from "@/utils/store";
 
-const WishlistPage = () => {
+const WishlistBox = () => {
     const { whishList, searchTerm } = useSelector(
         (state: {
             itemsReducer: { whishList: Item[]; searchTerm: string };
@@ -101,4 +101,4 @@ const WishlistPage = () => {
     );
 };
 
-export default WishlistPage;
+export default WishlistBox;

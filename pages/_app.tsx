@@ -5,15 +5,21 @@ import theme from "@/styles/theme";
 import { Provider } from "react-redux";
 import store from "@/utils/store";
 import LayoutComponent from "@/components/layout";
+import { SessionProvider } from "next-auth/react";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+    Component,
+    pageProps: { session, ...pageProps },
+}: AppProps) {
     return (
-        <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <LayoutComponent>
-                    <Component {...pageProps} />
-                </LayoutComponent>
-            </ThemeProvider>{" "}
-        </Provider>
+        <SessionProvider session={session}>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <LayoutComponent>
+                        <Component {...pageProps} />
+                    </LayoutComponent>
+                </ThemeProvider>{" "}
+            </Provider>
+        </SessionProvider>
     );
 }

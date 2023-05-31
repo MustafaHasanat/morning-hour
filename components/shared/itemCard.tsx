@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { itemsActions } from "@/utils/store";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import { useRouter } from "next/router";
+import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 
 interface ItemCardProps {
     item: Item;
@@ -108,8 +109,12 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     },
                 }}
                 onClick={() => {
-                    dispatch(itemsActions.setCurrentVisitedItem(item));
-                    router.push("/product");
+                    router.push(
+                        `/product/${itemTitleSerializer(
+                            item.title,
+                            "underscored"
+                        )}`
+                    );
                 }}
             >
                 <Avatar

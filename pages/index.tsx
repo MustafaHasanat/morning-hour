@@ -1,7 +1,7 @@
 import BestSellingItems from "@/components/landingPage/bestSellingItems";
 import FeaturedItemBox from "@/components/landingPage/featuredItemBox";
 import { Item } from "@/types/item";
-import { getAllItems, getItemById } from "@/utils/sanity/item";
+import { getAllItems, getItemByCondition } from "@/utils/sanity/item";
 import { itemsActions } from "@/utils/store";
 import { Stack } from "@mui/material";
 import { useEffect } from "react";
@@ -15,9 +15,9 @@ export const getStaticProps = async (): Promise<{
 }> => {
     const items = await getAllItems();
     // get the one featured book
-    const featuredItem = await getItemById(
-        "11ee9793-51b3-4aaa-bcab-2bde936934c2"
-    );
+    const featuredItem = await getItemByCondition({
+        id: "11ee9793-51b3-4aaa-bcab-2bde936934c2",
+    });
 
     return {
         props: { items, featuredItem },
@@ -33,11 +33,7 @@ export default function Home({ items, featuredItem }: HomeProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(
-            itemsActions.setBestSelling(
-                items
-            )
-        );
+        dispatch(itemsActions.setBestSelling(items));
     }, [dispatch, items]);
 
     return (
