@@ -2,12 +2,16 @@ import theme from "@/styles/theme";
 import { Item } from "@/types/item";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 
 interface FeaturedItemBoxProps {
     item: Item;
 }
 
 const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
+    const router = useRouter();
+
     return (
         <Stack
             position="relative"
@@ -59,8 +63,16 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                         borderRadius: 3,
                         textTransform: "capitalize",
                     }}
+                    onClick={() => {
+                        router.push(
+                            `/product/${itemTitleSerializer(
+                                item.title,
+                                "underscored"
+                            )}`
+                        );
+                    }}
                 >
-                    get the best selling book
+                    get the book of the morning
                 </Button>
             </Stack>
 

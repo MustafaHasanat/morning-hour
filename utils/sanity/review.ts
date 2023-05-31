@@ -20,3 +20,32 @@ export async function getReviewsForItem(itemId: string): Promise<Review[]> {
         },
     }`);
 }
+
+export async function createReview({
+    text,
+    rating,
+    itemId,
+    userId,
+}: {
+    text: string;
+    rating: number;
+    itemId: string;
+    userId: string;
+}) {
+    try {
+        await fetch("/api/user/postReview", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                text,
+                rating,
+                itemId,
+                userId,
+            }),
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}

@@ -52,15 +52,21 @@ export async function getAllItems(): Promise<Item[]> {
     }`);
 }
 
-export async function getItemById(id: string): Promise<Item> {
-    const item = await client.fetch(groq`*[_type == "item" && _id == "${id}"]{
+export async function getItemByCondition(condition: {
+    id?: string;
+    title?: string;
+}): Promise<Item> {
+    const { id, title } = condition;
+
+    const query = `${id ? `_id == "${id}"` : `title == "${title}"`}`;
+
+    const item = await client.fetch(groq`*[_type == "item" && ${query}]{
         _id,
         title,
         description,
         currentPrice,
         oldPrice,
         isBestSelling,
-        rating,
         primaryColor,
         category->{
             title,

@@ -34,7 +34,9 @@ const Footer = () => {
                     height: "2.5rem",
                 }}
             >
-                <Link href={url}>{icon}</Link>
+                <Link href={url} target="_blank">
+                    {icon}
+                </Link>
             </Box>
         );
     };

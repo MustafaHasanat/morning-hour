@@ -9,7 +9,6 @@ export type Item = {
     currentPrice: number;
     oldPrice: number;
     isBestSelling: boolean;
-    rating: number;
     primaryColor: string;
     category: Category;
     reviews: Review[];

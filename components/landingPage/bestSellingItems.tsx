@@ -16,14 +16,15 @@ const BestSellingItems = ({ items }: AllItemsBoxProps) => {
     const bestSellingRef = useRef(null);
     const bestSellingInView = useInView(bestSellingRef);
 
-    const bestSelling = useSelector(
-        (state: { itemsReducer: { bestSelling: Item[] } }) =>
-            state.itemsReducer.bestSelling
-    );
-
-    const searchTerm = useSelector(
-        (state: { itemsReducer: { searchTerm: string } }) =>
-            state.itemsReducer.searchTerm
+    const { bestSelling, searchTerm } = useSelector(
+        (state: {
+            itemsReducer: { bestSelling: Item[]; searchTerm: string };
+        }) => {
+            return {
+                bestSelling: state.itemsReducer.bestSelling,
+                searchTerm: state.itemsReducer.searchTerm,
+            };
+        }
     );
 
     useEffect(() => {
@@ -37,7 +38,13 @@ const BestSellingItems = ({ items }: AllItemsBoxProps) => {
     }, [bestSelling, searchTerm]);
 
     return (
-        <Stack px={10} py={5} mb={{xs: 10}} alignItems="center" id="best-selling-section">
+        <Stack
+            px={10}
+            py={5}
+            mb={{ xs: 10 }}
+            alignItems="center"
+            id="best-selling-section"
+        >
             <Stack
                 component={motion.div}
                 ref={bestSellingRef}

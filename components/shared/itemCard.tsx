@@ -9,6 +9,8 @@ import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { itemsActions } from "@/utils/store";
 import { CartItemProps } from "@/utils/store/itemsSlice";
+import { useRouter } from "next/router";
+import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 
 interface ItemCardProps {
     item: Item;
@@ -17,6 +19,8 @@ interface ItemCardProps {
 const ItemCard = ({ item }: ItemCardProps) => {
     const [isButtonHovered, setIsButtonHovered] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+
+    const router = useRouter();
 
     const dispatch = useDispatch();
     const { whishList, cartItems } = useSelector(
@@ -92,10 +96,25 @@ const ItemCard = ({ item }: ItemCardProps) => {
             }}
         >
             <Stack
+                component="div"
                 alignItems="center"
                 sx={{
+                    cursor: "pointer",
                     width: { xs: "10rem" },
                     height: { xs: "10em" },
+                    transition: "0.3s ease",
+
+                    "&:hover": {
+                        opacity: 0.5,
+                    },
+                }}
+                onClick={() => {
+                    router.push(
+                        `/product/${itemTitleSerializer(
+                            item.title,
+                            "underscored"
+                        )}`
+                    );
                 }}
             >
                 <Avatar
@@ -108,7 +127,11 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     }}
                 />
 
-                <Typography mt={{ xs: 2 }} fontSize={{ xs: "1.2rem" }}>
+                <Typography
+                    mt={{ xs: 2 }}
+                    fontSize={{ xs: "1.2rem" }}
+                    textAlign="center"
+                >
                     {item.title}
                 </Typography>
 
