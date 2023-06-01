@@ -5,6 +5,8 @@ import { ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
+import { getUserByCondition } from "@/utils/sanity/user";
+import { LocalUser } from "@/types/user";
 import { useSession } from "next-auth/react";
 
 interface ButtonsSetProps {
@@ -17,7 +19,22 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
     const [menuBtn, setMenuBtn] = useState(false);
     const [avatarImage, setAvatarImage] = useState("none");
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
+
+    const [user, setUser] = useState<LocalUser | null>(null);
+
+    useEffect(() => {
+        const localUser = window.localStorage.getItem("user");
+
+        if (localUser) {
+            const userObj: LocalUser = JSON.parse(localUser);
+
+            if (userObj && userObj.avatar) {
+                setAvatarImage(userObj.avatar.asset.url);
+                setUser(userObj);
+            }
+        }
+    }, []);
 
     const cartItems = useSelector(
         (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
@@ -25,12 +42,6 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     );
 
     const { itemsCount } = getTotalPrice(cartItems);
-
-    useEffect(() => {
-        if (status == "authenticated" && session && session.user) {
-            setAvatarImage(`${session.user.image}`);
-        }
-    }, [session, status]);
 
     const headerIconWrapper = (
         child: ReactNode,
@@ -100,7 +111,7 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
             )}
 
             {headerIconWrapper(
-                status === "authenticated" ? (
+                user ? (
                     <Avatar alt="user avatar" src={avatarImage} />
                 ) : (
                     <MenuRoundedIcon

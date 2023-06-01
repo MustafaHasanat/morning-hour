@@ -33,6 +33,10 @@ export default function Home({ items, featuredItem }: HomeProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        window.localStorage.removeItem("splash");
+    }, []);
+
+    useEffect(() => {
         dispatch(itemsActions.setBestSelling(items));
     }, [dispatch, items]);
 

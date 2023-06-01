@@ -8,7 +8,7 @@ interface ExpandedWidgetProps {
     isOpened: boolean;
     iconSize?: string;
     height?: string;
-    bgcolor?: string;
+    colorHovered?: string;
     extraSX?: any;
 }
 
@@ -19,11 +19,11 @@ const ExpandedWidget = ({
     isOpened,
     iconSize = "3rem",
     height = "48px",
-    bgcolor = "background.paper",
+    colorHovered = "background.paper",
     extraSX,
 }: ExpandedWidgetProps) => {
     return (
-        <Stack p={1} direction="row" >
+        <Stack p={1} direction="row">
             <Stack
                 component="div"
                 sx={{
@@ -31,7 +31,7 @@ const ExpandedWidget = ({
                     height: iconSize,
                     width: iconSize,
                     cursor: "pointer",
-                    bgcolor: bgcolor,
+                    bgcolor: "background.paper",
                     color: "secondary.main",
                     borderRadius: "100%",
                     justifyContent: "center",
@@ -40,7 +40,7 @@ const ExpandedWidget = ({
                     transition: "0.3s ease",
 
                     "&:hover": {
-                        color: "primary.main",
+                        color: colorHovered,
                     },
 
                     ...extraSX,
@@ -53,7 +53,7 @@ const ExpandedWidget = ({
             <Stack
                 justifyContent="center"
                 sx={{
-                    bgcolor: bgcolor,
+                    bgcolor: "background.paper",
                     height: height,
                     transform: `translateX(calc(-1 * (${iconSize} / 2)))`,
                     pl: isOpened ? `calc(${iconSize} / 2)` : 0,

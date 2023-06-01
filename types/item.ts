@@ -11,7 +11,6 @@ export type Item = {
     isBestSelling: boolean;
     primaryColor: string;
     category: Category;
-    reviews: Review[];
     author: Author;
     image: {
         asset: {

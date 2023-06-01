@@ -2,41 +2,20 @@ import { Avatar, Stack, Typography } from "@mui/material";
 import { Item } from "@/types/item";
 import theme from "@/styles/theme";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { CartItemProps } from "@/utils/store/itemsSlice";
+import { useState } from "react";
 
 interface ImagesFlipperProps {
     item: Item;
+    isFavorite: boolean;
 }
 
-const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
+const ImagesFlipper = ({ item, isFavorite }: ImagesFlipperProps) => {
     const [sliderShift, setSliderShift] = useState(0);
-    const [isFavorite, setIsFavorite] = useState(false);
 
     const imageSize = 23;
     const thumbnailSize = 4;
     const frameSize = 25;
     const imagesSpaceLength = 2;
-
-    const whishList = useSelector(
-        (state: { itemsReducer: { whishList: Item[] } }) =>
-            state.itemsReducer.whishList
-    );
-
-    useEffect(() => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
-
-        if (matchedList.length !== 0) {
-            setIsFavorite(true);
-        } else {
-            setIsFavorite(false);
-        }
-    }, [item._id, whishList]);
 
     const handleThumbnailClick = (index: number) => {
         setSliderShift(index);

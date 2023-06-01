@@ -18,18 +18,6 @@ const itemContents = `
             }
         },
     },
-    reviews->{
-        text,
-        rating,
-        user->{
-            userName,
-            avatar {
-                asset->{
-                    url
-                }
-            },
-        },
-    }[],
     author->{
         name,
         image {

@@ -91,3 +91,29 @@ export async function getUserByCondition(condition: {
     );
     return user[0];
 }
+
+export async function createUser({
+    userName,
+    email,
+    password,
+}: {
+    userName: string;
+    email: string;
+    password: string;
+}): Promise<Response> {
+    try {
+        return await fetch("/api/user/createUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userName,
+                email,
+                password,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}

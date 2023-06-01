@@ -193,7 +193,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                             />
                         }
                         iconOnClick={handleCartButton}
-                        bgcolor={item.primaryColor}
+                        colorHovered={item.primaryColor}
                         extraSX={{
                             cursor: "unset",
                         }}
@@ -210,7 +210,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     animate={{
                         opacity: isFavorite ? 1 : 0.5,
                         color: isFavorite
-                            ? theme.palette.primary.main
+                            ? item.primaryColor
                             : theme.palette.secondary.main,
                     }}
                     whileHover={{
@@ -265,7 +265,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     textTransform="capitalize"
                     fontSize={{ xs: "1rem" }}
                 >
-                    on wishlist{" "}
+                    on wishlist
                 </Typography>
             </Stack>
         </Stack>

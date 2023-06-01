@@ -1,10 +1,7 @@
 import {
-    Alert,
     Avatar,
     Box,
     Button,
-    Divider,
-    Snackbar,
     Stack,
     TextField,
     Typography,
@@ -17,6 +14,7 @@ import { createReview, getReviewsForItem } from "@/utils/sanity/review";
 import { Item } from "@/types/item";
 import { Review } from "@/types/review";
 import StarIcon from "@mui/icons-material/Star";
+import SnackbarWrapper from "../shared/snackbarWrapper";
 
 interface ReviewsBoxProps {
     item: Item;
@@ -260,21 +258,12 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                     add the review
                 </Button>
 
-                <Snackbar
-                    open={isSnackbarOpen}
-                    autoHideDuration={5000}
-                    onClose={() => {
-                        setIsSnackbarOpen(false);
-                    }}
-                >
-                    <Alert
-                        severity="error"
-                        variant="filled"
-                        sx={{ width: "100%" }}
-                    >
-                        You have to fill the field and rating!
-                    </Alert>
-                </Snackbar>
+                <SnackbarWrapper
+                    isOpen={isSnackbarOpen}
+                    setIsOpen={setIsSnackbarOpen}
+                    severity="error"
+                    text={" You have to fill the field and rating!"}
+                />
             </Stack>
         </Stack>
     );

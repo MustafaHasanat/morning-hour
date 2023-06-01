@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import { itemsActions } from "@/utils/store";
 import { Review } from "@/types/review";
+import { useState } from "react";
 
 interface DetailsBoxProps {
     item: Item;
     reviews: Review[];
+    isFavorite: boolean;
 }
 
-const DetailsBox = ({ item, reviews }: DetailsBoxProps) => {
+const DetailsBox = ({ item, reviews, isFavorite }: DetailsBoxProps) => {
     const dispatch = useDispatch();
     const { whishList, cartItems } = useSelector(
         (state: {
@@ -59,6 +61,8 @@ const DetailsBox = ({ item, reviews }: DetailsBoxProps) => {
             dispatch(itemsActions.deleteFromWhishList(item));
         }
     };
+
+    //TODO: fire a snackbar once the item is added to the cart
 
     return (
         <Stack width={{ xs: "100%" }} px={{ xs: 8 }}>
@@ -192,7 +196,7 @@ const DetailsBox = ({ item, reviews }: DetailsBoxProps) => {
                         alignSelf: "end",
                     }}
                 >
-                    add to wishlist
+                    {isFavorite ? "remove from wishlist" : "add to wishlist"}
                 </Button>
             </Stack>
         </Stack>

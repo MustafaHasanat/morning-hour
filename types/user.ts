@@ -22,3 +22,25 @@ export type User = {
         };
     };
 };
+
+export type LocalUser = {
+    id?: string;
+    userName?: string;
+    phoneNumber?: number;
+    email?: string;
+    password?: string;
+    recentVisited?: Item[];
+    whishList?: Item[];
+    cart?: Item[];
+    orders?: Order[];
+    address?: string;
+    isAdmin?: boolean;
+    paymentMethods?: {
+        name: string;
+    }[];
+    avatar?: {
+        asset: {
+            url: string;
+        };
+    };
+};

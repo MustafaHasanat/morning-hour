@@ -31,9 +31,9 @@ export async function createReview({
     rating: number;
     itemId: string;
     userId: string;
-}) {
+}): Promise<Response> {
     try {
-        await fetch("/api/user/postReview", {
+        return await fetch("/api/user/createReview", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export async function createReview({
                 userId,
             }),
         });
-    } catch (err) {
-        console.log(err);
+    } catch (err: any) {
+        return err;
     }
 }

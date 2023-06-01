@@ -1,11 +1,11 @@
 import { client } from "@/utils/sanity/client";
 
-export default async function postUser(req: any, res: any) {
+export default async function createReview(req: any, res: any) {
     const { text, rating, userId, itemId } = req.body;
 
     try {
         await client.create({
-            _type: "user",
+            _type: "review",
             text,
             rating,
             user: {
