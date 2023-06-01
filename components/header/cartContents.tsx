@@ -7,6 +7,7 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { itemsActions } from "@/utils/store";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
+import { useRouter } from "next/router";
 
 interface CartContentsProps {
     setDropDownContents: Dispatch<SetStateAction<"" | "menu" | "cart">>;
@@ -14,6 +15,7 @@ interface CartContentsProps {
 
 const CartContents = ({ setDropDownContents }: CartContentsProps) => {
     const [totalPrice, setTotalPrice] = useState(0);
+    const router = useRouter();
 
     const dispatch = useDispatch();
     const cartItems = useSelector(
@@ -71,6 +73,9 @@ const CartContents = ({ setDropDownContents }: CartContentsProps) => {
                 variant="contained"
                 endIcon={<ShoppingCartCheckoutIcon />}
                 sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
+                onClick={() => {
+                    router.push("/account/checkout");
+                }}
             >
                 checkout
             </Button>

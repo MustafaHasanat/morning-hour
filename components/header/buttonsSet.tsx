@@ -1,10 +1,13 @@
 import { Avatar, Badge, Button, Stack } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
+import { getUserByCondition } from "@/utils/sanity/user";
+import { LocalUser } from "@/types/user";
+import { useSession } from "next-auth/react";
 
 interface ButtonsSetProps {
     setDropDownContents: React.Dispatch<
@@ -15,6 +18,23 @@ interface ButtonsSetProps {
 const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
     const [menuBtn, setMenuBtn] = useState(false);
+    const [avatarImage, setAvatarImage] = useState("none");
+    const { data: session } = useSession();
+
+    const [user, setUser] = useState<LocalUser | null>(null);
+
+    useEffect(() => {
+        const localUser = window.localStorage.getItem("user");
+
+        if (localUser) {
+            const userObj: LocalUser = JSON.parse(localUser);
+
+            if (userObj && userObj.avatar) {
+                setAvatarImage(userObj.avatar.asset.url);
+                setUser(userObj);
+            }
+        }
+    }, []);
 
     const cartItems = useSelector(
         (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
@@ -31,7 +51,11 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     ) => {
         return (
             <Button
-                sx={{ height: { xs: "3.5rem" }, width: "auto", zIndex: 11 }}
+                sx={{
+                    height: { xs: "3.5rem" },
+                    width: "auto",
+                    zIndex: 11,
+                }}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
@@ -86,29 +110,29 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                 }
             )}
 
-            {false ? (
-                <Avatar />
-            ) : (
-                headerIconWrapper(
+            {headerIconWrapper(
+                user ? (
+                    <Avatar alt="user avatar" src={avatarImage} />
+                ) : (
                     <MenuRoundedIcon
                         sx={{
                             color: menuBtn ? "primary.main" : "secondary.main",
                             width: "auto",
                             height: "100%",
                         }}
-                    />,
-                    () => {
-                        setMenuBtn(true);
-                    },
-                    () => {
-                        setMenuBtn(false);
-                    },
-                    () => {
-                        setDropDownContents((prev) =>
-                            prev === "menu" ? "" : "menu"
-                        );
-                    }
-                )
+                    />
+                ),
+                () => {
+                    setMenuBtn(true);
+                },
+                () => {
+                    setMenuBtn(false);
+                },
+                () => {
+                    setDropDownContents((prev) =>
+                        prev === "menu" ? "" : "menu"
+                    );
+                }
             )}
         </Stack>
     );

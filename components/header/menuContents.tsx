@@ -10,20 +10,29 @@ import {
     Switch,
     Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CustomDivider from "../shared/customDivider";
 import { useRouter } from "next/router";
-
-// TODO: change the sign-out icon and text depending on the state of the user
+import { signOut } from "next-auth/react";
+import { LocalUser } from "@/types/user";
 
 const MenuContents = () => {
     const [language, setLanguage] = useState("english");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
+
+    const [user, setUser] = useState<LocalUser | null>(null);
+
+    useEffect(() => {
+        const user = window.localStorage.getItem("user");
+        if (user) {
+            const userObj: LocalUser = JSON.parse(user);
+            setUser(userObj);
+        }
+    }, []);
 
     return (
         <List
@@ -81,11 +90,16 @@ const MenuContents = () => {
 
             <CustomDivider />
 
-            {isLoggedIn ? (
+            {user ? (
                 <Button
                     variant="outlined"
                     endIcon={<LogoutIcon />}
-                    sx={{ my: 1, textTransform: "lowercase" }}
+                    sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
+                    onClick={() => {
+                        window.localStorage.removeItem("user");
+                        signOut();
+                        router.push("/");
+                    }}
                 >
                     logout
                 </Button>

@@ -6,12 +6,16 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useDispatch, useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import { itemsActions } from "@/utils/store";
+import { Review } from "@/types/review";
+import { useState } from "react";
 
 interface DetailsBoxProps {
     item: Item;
+    reviews: Review[];
+    isFavorite: boolean;
 }
 
-const DetailsBox = ({ item }: DetailsBoxProps) => {
+const DetailsBox = ({ item, reviews, isFavorite }: DetailsBoxProps) => {
     const dispatch = useDispatch();
     const { whishList, cartItems } = useSelector(
         (state: {
@@ -22,6 +26,12 @@ const DetailsBox = ({ item }: DetailsBoxProps) => {
                 cartItems: state.itemsReducer.cartItems,
             };
         }
+    );
+
+    const itemRating = Math.floor(
+        reviews.reduce((summation, review) => {
+            return summation + review.rating;
+        }, 0) / reviews.length
     );
 
     const handleCartButton = () => {
@@ -52,6 +62,8 @@ const DetailsBox = ({ item }: DetailsBoxProps) => {
         }
     };
 
+    //TODO: fire a snackbar once the item is added to the cart
+
     return (
         <Stack width={{ xs: "100%" }} px={{ xs: 8 }}>
             <Stack>
@@ -74,40 +86,38 @@ const DetailsBox = ({ item }: DetailsBoxProps) => {
                         rating:
                     </Typography>
 
-                    {Array(
-                        !item.reviews
-                            ? 5
-                            : Math.floor(
-                                  item.reviews.reduce((summation, review) => {
-                                      return summation + review.rating;
-                                  }, 0) / item.reviews.length
-                              )
-                    )
-                        .fill(0)
-                        .map((val, index) => {
-                            return (
-                                <Box
-                                    key={`rating start for ${item.title} number ${index}`}
-                                    sx={{
-                                        width: "2.5rem",
-                                        height: "2.5rem",
-                                    }}
-                                >
-                                    <StarIcon
+                    <Stack direction="row">
+                        {Array(5)
+                            .fill(0)
+                            .map((val, index) => {
+                                return (
+                                    <Box
+                                        key={`rating start for ${item.title} number ${index}`}
                                         sx={{
-                                            width: "100%",
-                                            height: "100%",
-                                            opacity: !item.reviews ? 0.2 : 1,
-                                            color: !item.reviews
-                                                ? "gray"
-                                                : "gold",
+                                            width: "2.5rem",
+                                            height: "2.5rem",
                                         }}
-                                    />
-                                </Box>
-                            );
-                        })}
+                                    >
+                                        <StarIcon
+                                            sx={{
+                                                width: "100%",
+                                                height: "100%",
+                                                opacity:
+                                                    index >= itemRating
+                                                        ? 0.2
+                                                        : 1,
+                                                color:
+                                                    index >= itemRating
+                                                        ? "gray"
+                                                        : "gold",
+                                            }}
+                                        />
+                                    </Box>
+                                );
+                            })}
+                    </Stack>
 
-                    {!item.reviews && (
+                    {reviews.length === 0 && (
                         <Typography fontSize={{ xs: "1.2rem" }}>
                             (nothing yet)
                         </Typography>
@@ -186,7 +196,7 @@ const DetailsBox = ({ item }: DetailsBoxProps) => {
                         alignSelf: "end",
                     }}
                 >
-                    add to wishlist
+                    {isFavorite ? "remove from wishlist" : "add to wishlist"}
                 </Button>
             </Stack>
         </Stack>

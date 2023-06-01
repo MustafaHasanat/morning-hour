@@ -193,7 +193,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                             />
                         }
                         iconOnClick={handleCartButton}
-                        bgcolor={item.primaryColor}
+                        colorHovered={item.primaryColor}
                         extraSX={{
                             cursor: "unset",
                         }}
@@ -210,7 +210,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     animate={{
                         opacity: isFavorite ? 1 : 0.5,
                         color: isFavorite
-                            ? theme.palette.primary.main
+                            ? item.primaryColor
                             : theme.palette.secondary.main,
                     }}
                     whileHover={{
@@ -246,7 +246,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
 
             <Stack
                 component={motion.div}
-                initial={{ rotate: 45, y: -130, x: 130 }}
+                initial={{ rotate: 45, y: -130, x: 140 }}
                 animate={{ rotate: 45, y: isFavorite ? 40 : -130, x: 140 }}
                 sx={{
                     position: "absolute",
@@ -265,7 +265,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     textTransform="capitalize"
                     fontSize={{ xs: "1rem" }}
                 >
-                    on wishlist{" "}
+                    on wishlist
                 </Typography>
             </Stack>
         </Stack>

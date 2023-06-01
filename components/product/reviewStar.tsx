@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
-import { ReducerActionProps, ReducerProps } from "./reviewsBox copy";
+import { ReducerActionProps, ReducerProps } from "./reviewsBox";
 
 interface ReviewStarProps {
     index: number;

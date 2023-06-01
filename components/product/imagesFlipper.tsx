@@ -1,4 +1,4 @@
-import { Avatar, Stack } from "@mui/material";
+import { Avatar, Stack, Typography } from "@mui/material";
 import { Item } from "@/types/item";
 import theme from "@/styles/theme";
 import { motion } from "framer-motion";
@@ -6,9 +6,10 @@ import { useState } from "react";
 
 interface ImagesFlipperProps {
     item: Item;
+    isFavorite: boolean;
 }
 
-const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
+const ImagesFlipper = ({ item, isFavorite }: ImagesFlipperProps) => {
     const [sliderShift, setSliderShift] = useState(0);
 
     const imageSize = 23;
@@ -34,7 +35,34 @@ const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
                 overflow="hidden"
                 mb={`${imagesSpaceLength}rem`}
                 border={`1px solid ${theme.palette.primary.main}`}
+                position="relative"
+            >
+                <Stack
+                    component={motion.div}
+                    initial={{ rotate: 45, y: -130, x: 140 }}
+                    animate={{ rotate: 45, y: isFavorite ? 40 : -130, x: 140 }}
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        bgcolor: "secondary.main",
+                        width: "400px",
+                        height: "50px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderTop: `1px solid ${theme.palette.primary.main}`,
+                        borderBottom: `1px solid ${theme.palette.primary.main}`,
+                        zIndex: 1,
+                    }}
                 >
+                    <Typography
+                        textTransform="capitalize"
+                        fontSize={{ xs: "1rem" }}
+                    >
+                        on wishlist{" "}
+                    </Typography>
+                </Stack>
+
                 <Stack
                     id="slider-box"
                     component={motion.div}
@@ -85,7 +113,7 @@ const ImagesFlipper = ({ item }: ImagesFlipperProps) => {
                         <Stack
                             component={motion.div}
                             initial={{
-                                backgroundColor: "transparent",
+                                backgroundColor: "#ffffff",
                             }}
                             whileHover={{
                                 scale: 1.1,
