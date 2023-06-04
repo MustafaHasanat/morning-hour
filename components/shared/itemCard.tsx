@@ -87,8 +87,8 @@ const ItemCard = ({ item }: ItemCardProps) => {
             alignItems="center"
             boxShadow={`5px 5px 15px 1px ${theme.palette.primary.main}`}
             position="relative"
-            overflow="hidden"
             sx={{
+                overflow: "hidden",
                 transition: "0.3s ease",
                 "&:hover": {
                     transform: "scale(1.1)",

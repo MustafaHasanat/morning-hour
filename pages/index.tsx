@@ -1,5 +1,7 @@
-import BestSellingItems from "@/components/landingPage/bestSellingItems";
+import DiscoverItems from "@/components/landingPage/discoverItems";
 import FeaturedItemBox from "@/components/landingPage/featuredItemBox";
+import BestSellingSlider from "@/components/shared/bestSellingSlider";
+import TitleBox from "@/components/shared/titleBox";
 import { Item } from "@/types/item";
 import { getAllItems, getItemByCondition } from "@/utils/sanity/item";
 import { itemsActions } from "@/utils/store";
@@ -43,7 +45,23 @@ export default function Home({ items, featuredItem }: HomeProps) {
     return (
         <Stack>
             <FeaturedItemBox item={featuredItem} />
-            <BestSellingItems items={items} />
+
+            <Stack
+                id="best-selling-section"
+                px={10}
+                py={0}
+                mb={{ xs: 10 }}
+                alignItems="center"
+            >
+                <TitleBox
+                    title="best seller books"
+                    subTitle="check our selected collection of world-class books"
+                />
+
+                <BestSellingSlider />
+            </Stack>
+
+            <DiscoverItems items={items} />
         </Stack>
     );
 }
