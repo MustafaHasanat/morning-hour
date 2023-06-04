@@ -47,34 +47,6 @@ export default function Product({
         <Stack alignItems="center">
             <BookPage item={item} reviews={reviews} />
             <YouMayAlsoLike />
-
-            {/* <Stack p={5} alignItems="center" height="70vh">
-                <Typography
-                    mt={2}
-                    fontSize={{ xs: "3rem" }}
-                    color="primary"
-                    textTransform="capitalize"
-                >
-                    wrong gateway
-                </Typography>
-
-                <Typography
-                    fontSize={{ xs: "1.5rem" }}
-                    color="secondary"
-                    mt={{ xs: 1 }}
-                    mb={{ xs: 8 }}
-                >
-                    redirecting to home page ...
-                </Typography>
-
-                <AssistantDirectionIcon
-                    color="primary"
-                    sx={{
-                        width: "5rem",
-                        height: "5rem",
-                    }}
-                />
-            </Stack> */}
         </Stack>
     );
 }

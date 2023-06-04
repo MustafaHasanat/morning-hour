@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch } from "react";
 import { motion } from "framer-motion";
 import { ReducerActionProps, ReducerProps } from "./reviewsBox";
 
@@ -9,6 +9,7 @@ interface ReviewStarProps {
     starsState: ReducerProps;
     dispatchStars: Dispatch<ReducerActionProps>;
 }
+
 const ReviewStar = ({ index, starsState, dispatchStars }: ReviewStarProps) => {
     return (
         <Box

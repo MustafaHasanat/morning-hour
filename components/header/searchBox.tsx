@@ -70,7 +70,7 @@ const SearchBox = ({}: SearchBoxProps) => {
                     setIsOpened((prev) => {
                         if (!prev) {
                             inputRef?.current?.focus();
-                            document.getElementById("best-selling-section")?.scrollIntoView({
+                            document.getElementById("discover-items-section")?.scrollIntoView({
                                 behavior: "smooth",
                             });
                         }

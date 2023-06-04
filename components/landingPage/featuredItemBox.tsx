@@ -18,7 +18,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
             direction={{ xs: "column", lg: "row" }}
             bgcolor="background.paper"
             mx={{ xs: 10 }}
-            my={{ xs: 5 }}
+            my={{ xs: 10 }}
             p={{ xs: 5 }}
             borderRadius={3}
             alignItems={{ xs: "end" }}
