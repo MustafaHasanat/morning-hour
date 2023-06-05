@@ -10,11 +10,12 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import ReviewStar from "./reviewStar";
 import { Fragment, useReducer, useRef, useState } from "react";
 import theme from "@/styles/theme";
-import { createReview, getReviewsForItem } from "@/utils/sanity/review";
+import { createReview } from "@/utils/sanity/review";
 import { Item } from "@/types/item";
 import { Review } from "@/types/review";
 import StarIcon from "@mui/icons-material/Star";
 import SnackbarWrapper from "../shared/snackbarWrapper";
+import { motion } from "framer-motion";
 
 interface ReviewsBoxProps {
     item: Item;
@@ -39,6 +40,9 @@ export type ReducerActionProps =
 const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
     const fieldRef = useRef<HTMLInputElement | null>(null);
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [snackbarMsg, setSnackbarMsg] = useState("");
+
+    const [maxReviews, setMaxReviews] = useState(5);
 
     const [starsState, dispatchStars] = useReducer(
         (state: ReducerProps, action: ReducerActionProps) => {
@@ -61,7 +65,7 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
         }
     );
 
-    const mapStartsToReview = (stars: number): string => {
+    const mapStarsToReview = (stars: number): string => {
         switch (stars) {
             case 1:
                 return "(very bad)";
@@ -78,23 +82,48 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
         }
     };
 
-    //TODO: add the review correctly
+    const { successMsg, errorMsg } = {
+        successMsg:
+            "Your review is registered successfully! .. It may take a minute to show up.",
+        errorMsg: {
+            authenticationError: "You have to sign in to write reviews!",
+            dataError: "You have to fill the field and rating!",
+        },
+    };
 
     const handleAddingReview = () => {
-        if (starsState.selectedStar !== 0 && fieldRef.current?.value !== "") {
-            if (fieldRef.current)
+        const localUser = localStorage.getItem("user");
+
+        if (!!!localUser) {
+            setSnackbarMsg(errorMsg.authenticationError);
+            setIsSnackbarOpen(true);
+            return;
+        }
+
+        if (starsState.selectedStar === 0 || fieldRef.current?.value === "") {
+            setSnackbarMsg(errorMsg.dataError);
+            setIsSnackbarOpen(true);
+            return;
+        }
+
+        if (fieldRef.current) {
+            const userObj = JSON.parse(localUser);
+
+            try {
                 createReview({
                     text: fieldRef.current.value,
                     rating: starsState.selectedStar,
                     itemId: item._id,
-                    userId: "",
+                    userId: userObj.id,
                 });
-        } else {
-            setIsSnackbarOpen(true);
+
+                setSnackbarMsg(successMsg);
+                setIsSnackbarOpen(true);
+            } catch (error) {
+                console.log("Error creating a review: ", error);
+            }
         }
     };
-
-    //TODO: hide overflow reviews when they exceeds 10 items and add a "load more" button
 
     return (
         <Stack alignItems="center" px={{ xs: 30 }}>
@@ -107,14 +136,20 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
             </Typography>
 
             <Stack width="100%" mb={{ xs: 10 }} spacing={5}>
-                {reviews.map((review, index) => {
+                {reviews.slice(0, maxReviews).map((review, index) => {
                     return (
                         <Stack
                             key={`review number ${index} for item ${item.title}`}
+                            component={motion.div}
+                            initial={{ height: "0px", padding: "0px" }}
+                            animate={{
+                                height: "fit-content",
+                                padding: "32px",
+                            }}
                             spacing={5}
                             bgcolor="background.default"
                             borderRadius={2}
-                            p={{ xs: 4 }}
+                            overflow="hidden"
                         >
                             <Stack
                                 direction="row"
@@ -179,6 +214,17 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                 })}
             </Stack>
 
+            {reviews.length > maxReviews && (
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        setMaxReviews((prev) => prev + 5);
+                    }}
+                    sx={{ mb: 8 }}
+                >
+                    load more
+                </Button>
+            )}
             <Stack width="100%">
                 <Typography
                     mb={{ xs: 2 }}
@@ -225,7 +271,7 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                         })}
 
                     <Typography ml={{ xs: 5 }} fontSize={{ xs: "1.3rem" }}>
-                        {mapStartsToReview(starsState.selectedStar)}
+                        {mapStarsToReview(starsState.selectedStar)}
                     </Typography>
 
                     {isSnackbarOpen && (
@@ -261,8 +307,8 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                 <SnackbarWrapper
                     isOpen={isSnackbarOpen}
                     setIsOpen={setIsSnackbarOpen}
-                    severity="error"
-                    text={" You have to fill the field and rating!"}
+                    severity={snackbarMsg === successMsg ? "success" : "error"}
+                    text={snackbarMsg}
                 />
             </Stack>
         </Stack>

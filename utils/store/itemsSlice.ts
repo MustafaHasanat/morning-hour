@@ -8,13 +8,9 @@ export interface CartItemProps {
 
 const initialItemsState: {
     cartItems: CartItemProps[];
-    whishList: Item[];
-    bestSelling: Item[];
     searchTerm: string;
 } = {
     cartItems: [],
-    whishList: [],
-    bestSelling: [],
     searchTerm: "",
 };
 
@@ -52,25 +48,7 @@ export const itemsSlice = createSlice({
                 }
             });
         },
-
-        setWhishList(state, action: { payload: Item[] }) {
-            state.whishList = action.payload;
-        },
-        addToWhishList(state, action: { payload: Item }) {
-            state.whishList.push(action.payload);
-        },
-        deleteFromWhishList(state, action: { payload: Item }) {
-            state.whishList = state.whishList.filter((item) => {
-                if (item._id !== action.payload._id) {
-                    return item;
-                }
-            });
-        },
-
-        setBestSelling(state, action: { payload: Item[] }) {
-            state.bestSelling = action.payload;
-        },
-
+        
         setSearchTerm(state, action: { payload: string }) {
             state.searchTerm = action.payload;
         },

@@ -33,7 +33,7 @@ export async function createReview({
     userId: string;
 }): Promise<Response> {
     try {
-        return await fetch("/api/user/createReview", {
+        return await fetch("/api/review/createReview", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

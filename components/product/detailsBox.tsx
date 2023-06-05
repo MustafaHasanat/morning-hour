@@ -7,22 +7,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import { itemsActions } from "@/utils/store";
 import { Review } from "@/types/review";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import {
+    addItemToWishlist,
+    removeItemFromWishlist,
+} from "@/utils/helpers/editWishlist";
 
 interface DetailsBoxProps {
     item: Item;
     reviews: Review[];
     isFavorite: boolean;
+    setIsFavorite: Dispatch<SetStateAction<boolean>>;
 }
 
-const DetailsBox = ({ item, reviews, isFavorite }: DetailsBoxProps) => {
+const DetailsBox = ({
+    item,
+    reviews,
+    isFavorite,
+    setIsFavorite,
+}: DetailsBoxProps) => {
     const dispatch = useDispatch();
-    const { whishList, cartItems } = useSelector(
-        (state: {
-            itemsReducer: { whishList: Item[]; cartItems: CartItemProps[] };
-        }) => {
+    const { cartItems } = useSelector(
+        (state: { itemsReducer: { cartItems: CartItemProps[] } }) => {
             return {
-                whishList: state.itemsReducer.whishList,
                 cartItems: state.itemsReducer.cartItems,
             };
         }
@@ -49,16 +56,14 @@ const DetailsBox = ({ item, reviews, isFavorite }: DetailsBoxProps) => {
     };
 
     const handleFavoriteButton = () => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
-
-        if (matchedList.length === 0) {
-            dispatch(itemsActions.addToWhishList(item));
+        if (isFavorite) {
+            // remove the item from wishlist
+            setIsFavorite(false);
+            removeItemFromWishlist(item._id);
         } else {
-            dispatch(itemsActions.deleteFromWhishList(item));
+            // add the item to wishlist
+            setIsFavorite(true);
+            addItemToWishlist(item._id);
         }
     };
 

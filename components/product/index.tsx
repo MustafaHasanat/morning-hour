@@ -6,6 +6,7 @@ import ReviewsBox from "./reviewsBox";
 import { Review } from "@/types/review";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { getCookieWithExpiry } from "@/utils/helpers/cookieHandler";
 
 interface BookPageProps {
     item: Item;
@@ -19,17 +20,22 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
         (state: { itemsReducer: { whishList: Item[] } }) =>
             state.itemsReducer.whishList
     );
-    useEffect(() => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
 
-        if (matchedList.length !== 0) {
-            setIsFavorite(true);
-        } else {
-            setIsFavorite(false);
+    useEffect(() => {
+        const whishList: string[] | null = getCookieWithExpiry("whishList");
+
+        if (whishList) {
+            const matchedList = whishList.filter((itemId) => {
+                if (itemId === item._id) {
+                    return itemId;
+                }
+            });
+
+            if (matchedList.length !== 0) {
+                setIsFavorite(true);
+            } else {
+                setIsFavorite(false);
+            }
         }
     }, [item._id, whishList]);
 
@@ -47,6 +53,7 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
                     item={item}
                     reviews={reviews}
                     isFavorite={isFavorite}
+                    setIsFavorite={setIsFavorite}
                 />
             </Stack>
 

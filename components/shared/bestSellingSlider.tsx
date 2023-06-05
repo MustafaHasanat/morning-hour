@@ -1,11 +1,13 @@
 import { Item } from "@/types/item";
 import { Stack } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
-import { useSelector } from "react-redux";
 import { keyframes } from "@mui/material/styles";
+import { getItemsByIds } from "@/utils/sanity/item";
 
 const BestSellingSlider = () => {
+    const [bestSellingItems, setBestSellingItems] = useState<Item[]>([]);
+
     const cardWidth = 15;
     const gapLength = 5;
 
@@ -14,13 +16,27 @@ const BestSellingSlider = () => {
         100% { left: 90vw };
     `;
 
-    const { bestSelling } = useSelector(
-        (state: { itemsReducer: { bestSelling: Item[] } }) => {
-            return {
-                bestSelling: state.itemsReducer.bestSelling,
-            };
-        }
-    );
+    useEffect(() => {
+        const getDate = async () => {
+            const strItems = localStorage.getItem("best-selling-items");
+
+            if (strItems) {
+                const bestSellingItems = JSON.parse(strItems).items;            
+                const items = await getItemsByIds(bestSellingItems);
+                setBestSellingItems(items);
+            }
+        };
+
+        getDate();
+    }, []);
+
+    // const { bestSelling } = useSelector(
+    //     (state: { itemsReducer: { bestSelling: Item[] } }) => {
+    //         return {
+    //             bestSelling: state.itemsReducer.bestSelling,
+    //         };
+    //     }
+    // );
 
     return (
         <Stack
@@ -51,10 +67,10 @@ const BestSellingSlider = () => {
                 }}
             >
                 {[
-                    ...bestSelling,
-                    ...bestSelling,
-                    ...bestSelling,
-                    ...bestSelling,
+                    ...bestSellingItems,
+                    ...bestSellingItems,
+                    ...bestSellingItems,
+                    ...bestSellingItems,
                 ].map((item, index) => {
                     return (
                         <Fragment key={`${index}`}>

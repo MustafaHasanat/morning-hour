@@ -52,3 +52,13 @@ export async function getItemByCondition(condition: {
     );
     return item[0];
 }
+
+export async function getItemsByIds(ids: string[]): Promise<Item[]> {
+    if (ids.length === 0) return [];
+
+    const modifiedArray = `["${ids.join(`", "`)}"]`;
+
+    return await client.fetch(
+        groq`*[_type == "item" && _id in ${modifiedArray}]{${itemContents}}`
+    );
+}

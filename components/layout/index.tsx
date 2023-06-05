@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { variablesActions } from "@/utils/store";
+import DialogBox from "./dialogBox";
 
 interface LayoutComponentProps {
     children: JSX.Element;
@@ -15,9 +16,8 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
     const router = useRouter();
     const dispatch = useDispatch();
 
+    // map the route name to the corresponding title
     const getTitle = (route: string): string => {
-        console.log(route);
-
         switch (route) {
             case "categories":
                 return "Categories";
@@ -28,10 +28,13 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
         }
     };
 
+    /**
+     * upon routing:
+     * - scroll to the top of the page
+     * - change the tab title accordingly
+     */
     useEffect(() => {
         document.getElementById("layout-box")?.scrollIntoView();
-        console.log(getTitle(router.asPath.slice(1)));
-
         dispatch(
             variablesActions.setHeadTitle(getTitle(router.asPath.slice(1)))
         );
@@ -41,6 +44,7 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
         <Box bgcolor="white" id="layout-box">
             <HeadTag />
             <Header />
+            <DialogBox />
             <Box component="main">{children}</Box>
             <Footer />
         </Box>

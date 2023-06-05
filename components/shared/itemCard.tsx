@@ -11,6 +11,11 @@ import { itemsActions } from "@/utils/store";
 import { CartItemProps } from "@/utils/store/itemsSlice";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
+import {
+    addItemToWishlist,
+    removeItemFromWishlist,
+} from "@/utils/helpers/editWishlist";
+import { getCookieWithExpiry } from "@/utils/helpers/cookieHandler";
 
 interface ItemCardProps {
     item: Item;
@@ -23,30 +28,31 @@ const ItemCard = ({ item }: ItemCardProps) => {
     const router = useRouter();
 
     const dispatch = useDispatch();
-    const { whishList, cartItems } = useSelector(
-        (state: {
-            itemsReducer: { whishList: Item[]; cartItems: CartItemProps[] };
-        }) => {
+    const { cartItems } = useSelector(
+        (state: { itemsReducer: { cartItems: CartItemProps[] } }) => {
             return {
-                whishList: state.itemsReducer.whishList,
                 cartItems: state.itemsReducer.cartItems,
             };
         }
     );
 
     useEffect(() => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
+        const whishList: string[] | null = getCookieWithExpiry("whishList");
 
-        if (matchedList.length !== 0) {
-            setIsFavorite(true);
-        } else {
-            setIsFavorite(false);
+        if (whishList) {
+            const matchedList = whishList.filter((itemId) => {
+                if (itemId === item._id) {
+                    return itemId;
+                }
+            });
+
+            if (matchedList.length !== 0) {
+                setIsFavorite(true);
+            } else {
+                setIsFavorite(false);
+            }
         }
-    }, [item._id, whishList]);
+    }, [item._id]);
 
     const handleCartButton = () => {
         const matchedList = cartItems.filter((cartItem) => {
@@ -63,16 +69,14 @@ const ItemCard = ({ item }: ItemCardProps) => {
     };
 
     const handleFavoriteButton = () => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
-
-        if (matchedList.length === 0) {
-            dispatch(itemsActions.addToWhishList(item));
+        if (isFavorite) {
+            // remove the item from wishlist
+            setIsFavorite(false);
+            removeItemFromWishlist(item._id);
         } else {
-            dispatch(itemsActions.deleteFromWhishList(item));
+            // add the item to wishlist
+            setIsFavorite(true);
+            addItemToWishlist(item._id);
         }
     };
 

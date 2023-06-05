@@ -7,7 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 const Splash = () => {
     const router = useRouter();
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-    const [snackbarMsg, setSnackbarMsg] = useState("unknown error");
+    const [snackbarMsg, setSnackbarMsg] = useState("authenticating");
     const { data: session } = useSession();
 
     const { successMsg, errorMsg } = {
@@ -109,20 +109,19 @@ const Splash = () => {
                     }
                 }
 
-                if (!window.localStorage.getItem("user")) {
+                if (!!!window.localStorage.getItem("user")) {
                     setIsSnackbarOpen(true);
                 }
 
                 window.localStorage.setItem("user", JSON.stringify(userObj));
 
-                if (!window.localStorage.getItem("splash")) {
+                if (!!!window.localStorage.getItem("splash")) {
                     window.localStorage.setItem("splash", "active");
                     window.location.reload();
                 } else {
-                    window.localStorage.removeItem("splash");
                     setTimeout(() => {
                         router.push("/");
-                    }, 5000);
+                    }, 3000);
                 }
             } else {
                 const localUser = window.localStorage.getItem("user");
@@ -132,7 +131,7 @@ const Splash = () => {
                     setSnackbarMsg(successMsg.userLoggedIn);
                 }
 
-                if (!window.localStorage.getItem("splash")) {
+                if (!!!window.localStorage.getItem("splash")) {
                     window.localStorage.setItem("splash", "active");
                     window.location.reload();
                 } else {
@@ -155,24 +154,30 @@ const Splash = () => {
                 redirecting ...
             </Typography>
 
-            {isSnackbarOpen && snackbarMsg !== "unknown error" && (
-                <Alert
-                    severity={
-                        [
-                            successMsg.userCreated,
-                            successMsg.userLoggedIn,
-                        ].includes(snackbarMsg)
-                            ? "success"
-                            : "error"
-                    }
-                    variant="standard"
-                    sx={{ width: "fit-content" }}
-                >
-                    <Typography fontSize={{ xs: "1.5rem" }}>
-                        {snackbarMsg}
-                    </Typography>
-                </Alert>
-            )}
+            <Alert
+                severity={
+                    [successMsg.userCreated, successMsg.userLoggedIn].includes(
+                        snackbarMsg
+                    )
+                        ? "success"
+                        : [
+                              errorMsg.postError,
+                              errorMsg.unauthorizedLogin,
+                          ].includes(snackbarMsg)
+                        ? "error"
+                        : "warning"
+                }
+                variant="standard"
+                sx={{
+                    width: "fit-content",
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                <Typography fontSize={{ xs: "1.5rem" }}>
+                    {snackbarMsg}
+                </Typography>
+            </Alert>
         </Stack>
     );
 };

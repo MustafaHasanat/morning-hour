@@ -20,7 +20,7 @@ const userContents = `
                 url
             }
         },
-    },
+    }[],
     whishList->{
         _id,
         title,
@@ -33,7 +33,7 @@ const userContents = `
                 url
             }
         },
-    },
+    }[],
     cart->{
         _id,
         title,
@@ -46,7 +46,7 @@ const userContents = `
                 url
             }
         },
-    },
+    }[],
     orders->{
         items {
             quantity,
@@ -63,7 +63,7 @@ const userContents = `
                 },
             },
         }[],
-    },
+    }[],
     address,
     isAdmin,
     paymentMethods {

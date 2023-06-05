@@ -39,7 +39,12 @@ export default function Home({ items, featuredItem }: HomeProps) {
     }, []);
 
     useEffect(() => {
-        dispatch(itemsActions.setBestSelling(items));
+        localStorage.setItem(
+            "best-selling-items",
+            JSON.stringify({
+                items: items.map((item) => item._id),
+            })
+        );
     }, [dispatch, items]);
 
     return (
