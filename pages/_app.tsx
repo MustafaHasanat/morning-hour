@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from "@/utils/store";
 import LayoutComponent from "@/components/layout";
 import { SessionProvider } from "next-auth/react";
+import ItemsContextProvider from "@/context/items/itemsContextProvider";
 
 export default function App({
     Component,
@@ -13,13 +14,15 @@ export default function App({
 }: AppProps) {
     return (
         <SessionProvider session={session}>
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <LayoutComponent>
-                        <Component {...pageProps} />
-                    </LayoutComponent>
-                </ThemeProvider>{" "}
-            </Provider>
+            <ItemsContextProvider>
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <LayoutComponent>
+                            <Component {...pageProps} />
+                        </LayoutComponent>
+                    </ThemeProvider>
+                </Provider>
+            </ItemsContextProvider>
         </SessionProvider>
     );
 }

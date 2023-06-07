@@ -1,12 +1,13 @@
 import { Item } from "@/types/item";
 import { Stack } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import { keyframes } from "@mui/material/styles";
-import { getItemsByIds } from "@/utils/sanity/item";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 const BestSellingSlider = () => {
-    const [bestSellingItems, setBestSellingItems] = useState<Item[]>([]);
+    const [bestSellingBooks, setBestSellingBooks] = useState<Item[]>([]);
+    const { booksObject } = useContext(ItemsContext);
 
     const cardWidth = 15;
     const gapLength = 5;
@@ -17,26 +18,14 @@ const BestSellingSlider = () => {
     `;
 
     useEffect(() => {
-        const getDate = async () => {
-            const strItems = localStorage.getItem("best-selling-items");
+        const items: Item[] = [];
+        Object.entries(booksObject).forEach((itemObj) => {
+            const [_, item] = itemObj;
+            items.push(item);
+        });
 
-            if (strItems) {
-                const bestSellingItems = JSON.parse(strItems).items;            
-                const items = await getItemsByIds(bestSellingItems);
-                setBestSellingItems(items);
-            }
-        };
-
-        getDate();
-    }, []);
-
-    // const { bestSelling } = useSelector(
-    //     (state: { itemsReducer: { bestSelling: Item[] } }) => {
-    //         return {
-    //             bestSelling: state.itemsReducer.bestSelling,
-    //         };
-    //     }
-    // );
+        setBestSellingBooks(items);
+    }, [booksObject]);
 
     return (
         <Stack
@@ -67,10 +56,10 @@ const BestSellingSlider = () => {
                 }}
             >
                 {[
-                    ...bestSellingItems,
-                    ...bestSellingItems,
-                    ...bestSellingItems,
-                    ...bestSellingItems,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
                 ].map((item, index) => {
                     return (
                         <Fragment key={`${index}`}>

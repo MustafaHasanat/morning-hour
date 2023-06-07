@@ -1,21 +1,15 @@
 import { Item } from "@/types/item";
-import { Box, Stack, Typography } from "@mui/material";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Stack } from "@mui/material";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import { useSelector } from "react-redux";
 import filterArrayByWord from "@/utils/helpers/filterArrayByWord";
-import { motion, useInView } from "framer-motion";
 import TitleBox from "../shared/titleBox";
+import { ItemsContext } from "@/context/items/itemsContext";
 
-interface DiscoverItemsProps {
-    items: Item[];
-}
-
-const DiscoverItems = ({ items }: DiscoverItemsProps) => {
-    const [filteredItems, setFilteredItems] = useState(items);
-
-    const discoverItemsRef = useRef(null);
-    const discoverItemsInView = useInView(discoverItemsRef);
+const DiscoverItems = () => {
+    const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+    const { booksObject } = useContext(ItemsContext);
 
     const { searchTerm } = useSelector(
         (state: { itemsReducer: { searchTerm: string } }) => {
@@ -26,6 +20,12 @@ const DiscoverItems = ({ items }: DiscoverItemsProps) => {
     );
 
     useEffect(() => {
+        const items: Item[] = [];
+        Object.entries(booksObject).forEach((itemObj) => {
+            const [_, item] = itemObj;
+            items.push(item);
+        });
+
         setFilteredItems(
             filterArrayByWord({
                 array: items,
@@ -33,7 +33,7 @@ const DiscoverItems = ({ items }: DiscoverItemsProps) => {
                 searchTerm,
             })
         );
-    }, [items, searchTerm]);
+    }, [booksObject, searchTerm]);
 
     return (
         <Stack
