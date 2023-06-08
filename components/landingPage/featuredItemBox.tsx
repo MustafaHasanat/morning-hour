@@ -8,7 +8,6 @@ import { useContext } from "react";
 
 const FeaturedItemBox = () => {
     const router = useRouter();
-
     const { booksObject } = useContext(ItemsContext);    
     const featuredItem = booksObject["11ee9793-51b3-4aaa-bcab-2bde936934c2"]
 

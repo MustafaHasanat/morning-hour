@@ -1,25 +1,22 @@
-import { CartItemProps } from "@/utils/store/itemsSlice";
-import { Avatar, Box, Button, Chip, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import CustomDivider from "./customDivider";
 import ClearIcon from "@mui/icons-material/Clear";
-import { useDispatch, useSelector } from "react-redux";
-import { itemsActions } from "@/utils/store";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { useContext } from "react";
+import { CartItemProps } from "@/context/items/itemsContextProvider";
 
 interface MiniCardProps {
     cartItem: CartItemProps;
 }
 
 const MiniCard = ({ cartItem }: MiniCardProps) => {
-    const dispatch = useDispatch();
-    const cartItems = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
-            state.itemsReducer.cartItems
-    );
+    const { deleteFromCartItems, changeQuantCartItem } =
+        useContext(ItemsContext);
 
     const handleRemove = () => {
-        dispatch(itemsActions.deleteFromCartItems(cartItem.item));
+        deleteFromCartItems(cartItem.item._id);
     };
 
     const textPair = (key: string, value: string) => {
@@ -52,19 +49,9 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
                 }}
                 onClick={() => {
                     if (sign === "+") {
-                        dispatch(
-                            itemsActions.changeQuantCartItem({
-                                item: cartItem.item,
-                                sign: "+",
-                            })
-                        );
+                        changeQuantCartItem(cartItem.item._id, "+");
                     } else {
-                        dispatch(
-                            itemsActions.changeQuantCartItem({
-                                item: cartItem.item,
-                                sign: "-",
-                            })
-                        );
+                        changeQuantCartItem(cartItem.item._id, "-");
                     }
                 }}
             >

@@ -3,15 +3,9 @@ import { Item } from "@/types/item";
 import StarIcon from "@mui/icons-material/Star";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useDispatch, useSelector } from "react-redux";
-import { CartItemProps } from "@/utils/store/itemsSlice";
-import { itemsActions } from "@/utils/store";
 import { Review } from "@/types/review";
-import { Dispatch, SetStateAction } from "react";
-import {
-    addItemToWishlist,
-    removeItemFromWishlist,
-} from "@/utils/helpers/editWishlist";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface DetailsBoxProps {
     item: Item;
@@ -26,14 +20,13 @@ const DetailsBox = ({
     isFavorite,
     setIsFavorite,
 }: DetailsBoxProps) => {
-    const dispatch = useDispatch();
-    const { cartItems } = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) => {
-            return {
-                cartItems: state.itemsReducer.cartItems,
-            };
-        }
-    );
+    const {
+        cartItems,
+        addToCartItems,
+        changeQuantCartItem,
+        addToWishlist,
+        deleteFromWishlist,
+    } = useContext(ItemsContext);
 
     const itemRating = Math.floor(
         reviews.reduce((summation, review) => {
@@ -49,9 +42,9 @@ const DetailsBox = ({
         });
 
         if (matchedList.length === 0) {
-            dispatch(itemsActions.addToCartItems({ item, quantity: 1 }));
+            addToCartItems({ item, quantity: 1 });
         } else {
-            dispatch(itemsActions.changeQuantCartItem({ item, sign: "+" }));
+            changeQuantCartItem(item._id, "+");
         }
     };
 
@@ -59,11 +52,11 @@ const DetailsBox = ({
         if (isFavorite) {
             // remove the item from wishlist
             setIsFavorite(false);
-            removeItemFromWishlist(item._id);
+            deleteFromWishlist(item._id);
         } else {
             // add the item to wishlist
             setIsFavorite(true);
-            addItemToWishlist(item._id);
+            addToWishlist(item);
         }
     };
 

@@ -2,30 +2,18 @@ import { Item } from "@/types/item";
 import { Stack } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
-import { useSelector } from "react-redux";
 import filterArrayByWord from "@/utils/helpers/filterArrayByWord";
 import TitleBox from "../shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
+import { itemsObjectToItemsArray } from "@/utils/helpers/itemsObjectHandler";
 
 const DiscoverItems = () => {
     const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-    const { booksObject } = useContext(ItemsContext);
-
-    const { searchTerm } = useSelector(
-        (state: { itemsReducer: { searchTerm: string } }) => {
-            return {
-                searchTerm: state.itemsReducer.searchTerm,
-            };
-        }
-    );
+    const { booksObject, searchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
-        const items: Item[] = [];
-        Object.entries(booksObject).forEach((itemObj) => {
-            const [_, item] = itemObj;
-            items.push(item);
-        });
-
+        const items = itemsObjectToItemsArray(booksObject);
+        
         setFilteredItems(
             filterArrayByWord({
                 array: items,

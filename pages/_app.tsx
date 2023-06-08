@@ -2,11 +2,10 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/material";
 import theme from "@/styles/theme";
-import { Provider } from "react-redux";
-import store from "@/utils/store";
 import LayoutComponent from "@/components/layout";
 import { SessionProvider } from "next-auth/react";
 import ItemsContextProvider from "@/context/items/itemsContextProvider";
+import PageVarsContextProvider from "@/context/pageVars/pageVarsContextProvider";
 
 export default function App({
     Component,
@@ -15,13 +14,13 @@ export default function App({
     return (
         <SessionProvider session={session}>
             <ItemsContextProvider>
-                <Provider store={store}>
+                <PageVarsContextProvider>
                     <ThemeProvider theme={theme}>
                         <LayoutComponent>
                             <Component {...pageProps} />
                         </LayoutComponent>
                     </ThemeProvider>
-                </Provider>
+                </PageVarsContextProvider>
             </ItemsContextProvider>
         </SessionProvider>
     );

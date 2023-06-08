@@ -4,6 +4,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import { keyframes } from "@mui/material/styles";
 import { ItemsContext } from "@/context/items/itemsContext";
+import { filterBestSellingItems } from "@/utils/helpers/itemsObjectHandler";
 
 const BestSellingSlider = () => {
     const [bestSellingBooks, setBestSellingBooks] = useState<Item[]>([]);
@@ -18,13 +19,7 @@ const BestSellingSlider = () => {
     `;
 
     useEffect(() => {
-        const items: Item[] = [];
-        Object.entries(booksObject).forEach((itemObj) => {
-            const [_, item] = itemObj;
-            items.push(item);
-        });
-
-        setBestSellingBooks(items);
+        setBestSellingBooks(filterBestSellingItems(booksObject));
     }, [booksObject]);
 
     return (

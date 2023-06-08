@@ -1,27 +1,29 @@
 import { Avatar, Badge, Button, Stack } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { ReactNode, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { CartItemProps } from "@/utils/store/itemsSlice";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
-import { getUserByCondition } from "@/utils/sanity/user";
 import { LocalUser } from "@/types/user";
-import { useSession } from "next-auth/react";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface ButtonsSetProps {
-    setDropDownContents: React.Dispatch<
-        React.SetStateAction<"" | "cart" | "menu">
-    >;
+    setDropDownContents: Dispatch<SetStateAction<"" | "cart" | "menu">>;
 }
 
 const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
     const [menuBtn, setMenuBtn] = useState(false);
     const [avatarImage, setAvatarImage] = useState("none");
-    const { data: session } = useSession();
-
     const [user, setUser] = useState<LocalUser | null>(null);
+
+    const { cartItems } = useContext(ItemsContext);
 
     useEffect(() => {
         const localUser = window.localStorage.getItem("user");
@@ -35,11 +37,6 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
             }
         }
     }, []);
-
-    const cartItems = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
-            state.itemsReducer.cartItems
-    );
 
     const { itemsCount } = getTotalPrice(cartItems);
 

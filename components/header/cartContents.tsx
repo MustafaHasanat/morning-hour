@@ -1,13 +1,11 @@
 import { Button, List, Stack, Typography } from "@mui/material";
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useContext, useEffect, useState } from "react";
 import MiniCard from "../shared/miniCard";
-import { useDispatch, useSelector } from "react-redux";
-import { CartItemProps } from "@/utils/store/itemsSlice";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { itemsActions } from "@/utils/store";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
 import { useRouter } from "next/router";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface CartContentsProps {
     setDropDownContents: Dispatch<SetStateAction<"" | "menu" | "cart">>;
@@ -15,16 +13,11 @@ interface CartContentsProps {
 
 const CartContents = ({ setDropDownContents }: CartContentsProps) => {
     const [totalPrice, setTotalPrice] = useState(0);
+    const { cartItems, setCartItems } = useContext(ItemsContext);
     const router = useRouter();
 
-    const dispatch = useDispatch();
-    const cartItems = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
-            state.itemsReducer.cartItems
-    );
-
     const handleClearButton = () => {
-        dispatch(itemsActions.setCartItems([]));
+        setCartItems([])
         setTimeout(() => {
             setDropDownContents("");
         }, 400);

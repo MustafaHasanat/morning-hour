@@ -4,9 +4,8 @@ import ImagesFlipper from "./imagesFlipper";
 import DetailsBox from "./detailsBox";
 import ReviewsBox from "./reviewsBox";
 import { Review } from "@/types/review";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getCookieWithExpiry } from "@/utils/helpers/cookieHandler";
+import { useContext, useEffect, useState } from "react";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface BookPageProps {
     item: Item;
@@ -15,29 +14,21 @@ interface BookPageProps {
 
 const BookPage = ({ item, reviews }: BookPageProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
-
-    const whishList = useSelector(
-        (state: { itemsReducer: { whishList: Item[] } }) =>
-            state.itemsReducer.whishList
-    );
+    const { wishlistItems } = useContext(ItemsContext);
 
     useEffect(() => {
-        const whishList: string[] | null = getCookieWithExpiry("whishList");
-
-        if (whishList) {
-            const matchedList = whishList.filter((itemId) => {
-                if (itemId === item._id) {
-                    return itemId;
-                }
-            });
-
-            if (matchedList.length !== 0) {
-                setIsFavorite(true);
-            } else {
-                setIsFavorite(false);
+        const matchedList = wishlistItems.filter((wishlistItem) => {
+            if (wishlistItem._id === item._id) {
+                return wishlistItem._id;
             }
+        });
+
+        if (matchedList.length !== 0) {
+            setIsFavorite(true);
+        } else {
+            setIsFavorite(false);
         }
-    }, [item._id, whishList]);
+    }, [item._id, wishlistItems]);
 
     return (
         <Stack px={{ xs: 10 }} py={{ xs: 10 }} width={{ xs: "100%" }}>

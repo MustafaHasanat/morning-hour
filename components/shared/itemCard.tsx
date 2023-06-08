@@ -1,40 +1,31 @@
 import theme from "@/styles/theme";
 import { Item } from "@/types/item";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import ExpandedWidget from "./expandedWidget";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import { itemsActions } from "@/utils/store";
-import { CartItemProps } from "@/utils/store/itemsSlice";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
-import {
-    addItemToWishlist,
-    removeItemFromWishlist,
-} from "@/utils/helpers/editWishlist";
 import { getCookieWithExpiry } from "@/utils/helpers/cookieHandler";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface ItemCardProps {
     item: Item;
 }
 
 const ItemCard = ({ item }: ItemCardProps) => {
+    const router = useRouter();
     const [isButtonHovered, setIsButtonHovered] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
-
-    const router = useRouter();
-
-    const dispatch = useDispatch();
-    const { cartItems } = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) => {
-            return {
-                cartItems: state.itemsReducer.cartItems,
-            };
-        }
-    );
+    const {
+        cartItems,
+        addToCartItems,
+        changeQuantCartItem,
+        addToWishlist,
+        deleteFromWishlist,
+    } = useContext(ItemsContext);
 
     useEffect(() => {
         const whishList: string[] | null = getCookieWithExpiry("whishList");
@@ -62,9 +53,9 @@ const ItemCard = ({ item }: ItemCardProps) => {
         });
 
         if (matchedList.length === 0) {
-            dispatch(itemsActions.addToCartItems({ item, quantity: 1 }));
+            addToCartItems({ item, quantity: 1 });
         } else {
-            dispatch(itemsActions.changeQuantCartItem({ item, sign: "+" }));
+            changeQuantCartItem(item._id, "+");
         }
     };
 
@@ -72,11 +63,11 @@ const ItemCard = ({ item }: ItemCardProps) => {
         if (isFavorite) {
             // remove the item from wishlist
             setIsFavorite(false);
-            removeItemFromWishlist(item._id);
+            deleteFromWishlist(item._id);
         } else {
             // add the item to wishlist
             setIsFavorite(true);
-            addItemToWishlist(item._id);
+            addToWishlist(item);
         }
     };
 

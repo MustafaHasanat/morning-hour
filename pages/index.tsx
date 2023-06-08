@@ -8,7 +8,6 @@ import { Item } from "@/types/item";
 import { getAllItems } from "@/utils/sanity/item";
 import { Stack } from "@mui/material";
 import { useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 export const getStaticProps = async (): Promise<{
     props: {
@@ -27,7 +26,6 @@ interface HomeProps {
 }
 
 export default function Home({ items }: HomeProps) {
-    const dispatch = useDispatch();
     const { setBooksObject } = useContext(ItemsContext);
 
     useEffect(() => {
@@ -44,15 +42,6 @@ export default function Home({ items }: HomeProps) {
 
         setBooksObject(booksObject);
     }, [items, setBooksObject]);
-
-    useEffect(() => {
-        localStorage.setItem(
-            "best-selling-items",
-            JSON.stringify({
-                items: items.map((item) => item._id),
-            })
-        );
-    }, [dispatch, items]);
 
     return (
         <Stack>

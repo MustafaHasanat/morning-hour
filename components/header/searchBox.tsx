@@ -1,28 +1,22 @@
 import { Stack, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useDispatch, useSelector } from "react-redux";
-import { itemsActions } from "@/utils/store";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import ExpandedWidget from "../shared/expandedWidget";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface SearchBoxProps {}
 
 const SearchBox = ({}: SearchBoxProps) => {
-    const dispatch = useDispatch();
     const router = useRouter();
     const [isOpened, setIsOpened] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
-
-    const searchTerm = useSelector(
-        (state: { itemsReducer: { searchTerm: string } }) =>
-            state.itemsReducer.searchTerm
-    );
+    const { searchTerm, setSearchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
         setIsOpened(false);
-        dispatch(itemsActions.setSearchTerm(""));
-    }, [dispatch, router.asPath]);
+        setSearchTerm("");
+    }, [router.asPath, setSearchTerm]);
 
     return (
         <Stack p={1} direction="row" alignItems="center">
@@ -33,9 +27,7 @@ const SearchBox = ({}: SearchBoxProps) => {
                         inputRef={inputRef}
                         value={searchTerm}
                         onChange={(e) => {
-                            dispatch(
-                                itemsActions.setSearchTerm(e.target.value)
-                            );
+                            setSearchTerm(e.target.value);
                         }}
                         sx={{
                             transition: "0.6s ease",
@@ -70,9 +62,11 @@ const SearchBox = ({}: SearchBoxProps) => {
                     setIsOpened((prev) => {
                         if (!prev) {
                             inputRef?.current?.focus();
-                            document.getElementById("discover-items-section")?.scrollIntoView({
-                                behavior: "smooth",
-                            });
+                            document
+                                .getElementById("discover-items-section")
+                                ?.scrollIntoView({
+                                    behavior: "smooth",
+                                });
                         }
                         return !prev;
                     });

@@ -1,15 +1,13 @@
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 import Head from "next/head";
-import { useSelector } from "react-redux";
+import { useContext } from "react";
 
 /**
  * the head of the website
  *
  */
 const HeadTag = () => {
-    const headTitle = useSelector(
-        (state: { variablesReducer: { headTitle: string } }) =>
-            state.variablesReducer.headTitle
-    );
+    const { headTitle } = useContext(PageVarsContext);
 
     return (
         <Head>

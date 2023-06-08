@@ -1,22 +1,15 @@
 import { Item } from "@/types/item";
 import filterArrayByWord from "@/utils/helpers/filterArrayByWord";
 import { Button, Stack, Typography } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 const WishlistBox = ({ whishList }: { whishList: Item[] }) => {
-    const { searchTerm } = useSelector(
-        (state: { itemsReducer: { searchTerm: string } }) => {
-            return {
-                searchTerm: state.itemsReducer.searchTerm,
-            };
-        }
-    );
-
     const [filteredItems, setFilteredItems] = useState(whishList);
+    const { searchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
         setFilteredItems(
@@ -30,7 +23,7 @@ const WishlistBox = ({ whishList }: { whishList: Item[] }) => {
 
     const handleClearButton = () => {
         localStorage.removeItem("whishList");
-        setFilteredItems([])
+        setFilteredItems([]);
     };
 
     return (

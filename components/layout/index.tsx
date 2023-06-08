@@ -2,11 +2,10 @@ import { Box } from "@mui/material";
 import HeadTag from "../metadata/headTag";
 import Header from "../header";
 import Footer from "../footer";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { variablesActions } from "@/utils/store";
 import DialogBox from "./dialogBox";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 
 interface LayoutComponentProps {
     children: JSX.Element;
@@ -14,7 +13,7 @@ interface LayoutComponentProps {
 
 const LayoutComponent = ({ children }: LayoutComponentProps) => {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const { setHeadTitle } = useContext(PageVarsContext);
 
     // map the route name to the corresponding title
     const getTitle = (route: string): string => {
@@ -35,10 +34,8 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
      */
     useEffect(() => {
         document.getElementById("layout-box")?.scrollIntoView();
-        dispatch(
-            variablesActions.setHeadTitle(getTitle(router.asPath.slice(1)))
-        );
-    }, [dispatch, router.asPath]);
+        setHeadTitle(getTitle(router.asPath.slice(1)));
+    }, [router.asPath, setHeadTitle]);
 
     return (
         <Box bgcolor="white" id="layout-box">
