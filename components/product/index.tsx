@@ -1,11 +1,11 @@
-import { Item } from "@/types/item";
+import { CartItem, Item } from "@/types/item";
 import { Divider, Stack } from "@mui/material";
 import ImagesFlipper from "./imagesFlipper";
 import DetailsBox from "./detailsBox";
 import ReviewsBox from "./reviewsBox";
 import { Review } from "@/types/review";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import useUserData from "@/hooks/useUserData";
 
 interface BookPageProps {
     item: Item;
@@ -14,15 +14,19 @@ interface BookPageProps {
 
 const BookPage = ({ item, reviews }: BookPageProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
+    const [wishlist, setWishlist] = useState<Item[]>([]);
+    const user = useUserData();
 
-    const whishList = useSelector(
-        (state: { itemsReducer: { whishList: Item[] } }) =>
-            state.itemsReducer.whishList
-    );
     useEffect(() => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
+        if (user && user.wishlist) {
+            setWishlist(user.wishlist);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const matchedList = wishlist.filter((wishlistItem) => {
+            if (wishlistItem._id === item._id) {
+                return wishlistItem._id;
             }
         });
 
@@ -31,7 +35,7 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
         } else {
             setIsFavorite(false);
         }
-    }, [item._id, whishList]);
+    }, [item._id, wishlist]);
 
     return (
         <Stack px={{ xs: 10 }} py={{ xs: 10 }} width={{ xs: "100%" }}>
@@ -47,6 +51,8 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
                     item={item}
                     reviews={reviews}
                     isFavorite={isFavorite}
+                    setIsFavorite={setIsFavorite}
+                    user={user}
                 />
             </Stack>
 

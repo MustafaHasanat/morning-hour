@@ -1,11 +1,12 @@
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import HeadTag from "../metadata/headTag";
 import Header from "../header";
 import Footer from "../footer";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { variablesActions } from "@/utils/store";
+import DialogBox from "./dialogBox";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import Script from "next/script";
 
 interface LayoutComponentProps {
     children: JSX.Element;
@@ -13,11 +14,16 @@ interface LayoutComponentProps {
 
 const LayoutComponent = ({ children }: LayoutComponentProps) => {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const {
+        setHeadTitle,
+        isSnackbarOpen,
+        setIsSnackbarOpen,
+        snackbarMsg,
+        snackbarSeverity,
+    } = useContext(PageVarsContext);
 
+    // map the route name to the corresponding title
     const getTitle = (route: string): string => {
-        console.log(route);
-
         switch (route) {
             case "categories":
                 return "Categories";
@@ -28,21 +34,43 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
         }
     };
 
+    /**
+     * upon routing:
+     * - scroll to the top of the page
+     * - change the tab title accordingly
+     */
     useEffect(() => {
         document.getElementById("layout-box")?.scrollIntoView();
-        console.log(getTitle(router.asPath.slice(1)));
-
-        dispatch(
-            variablesActions.setHeadTitle(getTitle(router.asPath.slice(1)))
-        );
-    }, [dispatch, router.asPath]);
+        setHeadTitle(getTitle(router.asPath.slice(1)));
+    }, [router.asPath, setHeadTitle]);
 
     return (
         <Box bgcolor="white" id="layout-box">
+            <Script
+                src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
+            ></Script>
+
             <HeadTag />
             <Header />
+            <DialogBox />
             <Box component="main">{children}</Box>
             <Footer />
+
+            <Snackbar
+                open={isSnackbarOpen}
+                autoHideDuration={5000}
+                onClose={() => {
+                    setIsSnackbarOpen(false);
+                }}
+            >
+                <Alert
+                    severity={snackbarSeverity}
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackbarMsg}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

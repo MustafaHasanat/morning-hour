@@ -1,16 +1,15 @@
 import theme from "@/styles/theme";
-import { Item } from "@/types/item";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { useContext } from "react";
 
-interface FeaturedItemBoxProps {
-    item: Item;
-}
-
-const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
+const FeaturedItemBox = () => {
     const router = useRouter();
+    const { booksObject } = useContext(ItemsContext);    
+    const featuredItem = booksObject["11ee9793-51b3-4aaa-bcab-2bde936934c2"]
 
     return (
         <Stack
@@ -44,20 +43,20 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                         width={{ xs: "70%" }}
                         fontSize={{ xs: "3rem" }}
                     >
-                        {item.title}
+                        {featuredItem?.title}
                     </Typography>
                     <Typography
                         color="secondary.main"
                         fontSize={{ xs: "1.2rem" }}
                     >
-                        ~ by {item.author.name}
+                        ~ by {featuredItem?.author.name}
                     </Typography>
                 </Stack>
 
                 <Button
                     variant="contained"
                     sx={{
-                        bgcolor: item.primaryColor,
+                        bgcolor: featuredItem?.primaryColor,
                         width: "fit-content",
                         p: 1.5,
                         borderRadius: 3,
@@ -66,7 +65,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                     onClick={() => {
                         router.push(
                             `/product/${itemTitleSerializer(
-                                item.title,
+                                featuredItem?.title,
                                 "underscored"
                             )}`
                         );
@@ -83,7 +82,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                 alignItems="end"
             >
                 <Avatar
-                    src={item.author.image.asset.url}
+                    src={featuredItem?.author.image.asset.url}
                     alt="best selling book"
                     sx={{
                         mb: 3,
@@ -99,7 +98,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                 >
                     description
                 </Typography>
-                <Typography textAlign="right">{item.description}</Typography>
+                <Typography textAlign="right">{featuredItem?.description}</Typography>
             </Stack>
 
             <Box
@@ -142,7 +141,7 @@ const FeaturedItemBox = ({ item }: FeaturedItemBoxProps) => {
                 }}
             >
                 <Avatar
-                    src={item.image.asset.url}
+                    src={featuredItem?.image.asset.url}
                     alt="best selling book"
                     sx={{
                         height: "100%",

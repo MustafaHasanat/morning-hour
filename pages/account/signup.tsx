@@ -12,9 +12,15 @@ import {
 import { signIn } from "next-auth/react";
 import GoogleIcon from "@mui/icons-material/Google";
 import { createUser, getUserByCondition } from "@/utils/sanity/user";
-import { ChangeEvent, FormEvent, useReducer, useState } from "react";
+import {
+    ChangeEvent,
+    FormEvent,
+    useContext,
+    useReducer,
+    useState,
+} from "react";
 import { useRouter } from "next/router";
-import SnackbarWrapper from "@/components/shared/snackbarWrapper";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 
 interface FormData {
     userName: string;
@@ -42,26 +48,13 @@ export default function SignUp() {
     const router = useRouter();
     const lgScreen = useMediaQuery("(min-width:1440px)");
 
-    const [snackbarState, dispatchSnackbar] = useReducer(
-        (state: ReducerProps, action: ReducerActionProps) => {
-            switch (action.type) {
-                case "isSnackbarOpen":
-                    return {
-                        ...state,
-                        isSnackbarOpen: action.payload,
-                    };
-                case "snackbarMsg":
-                    return {
-                        ...state,
-                        snackbarMsg: action.payload,
-                    };
-            }
-        },
-        {
-            isSnackbarOpen: false,
-            snackbarMsg: "",
-        }
-    );
+    const {
+        setIsSnackbarOpen,
+        setSnackbarMsg,
+        isSnackbarOpen,
+        snackbarMsg,
+        setSnackbarSeverity,
+    } = useContext(PageVarsContext);
 
     const [formData, setFormData] = useState<FormData>({
         userName: "",
@@ -95,11 +88,9 @@ export default function SignUp() {
 
             // if yes, then throw a snackbar error
             if (sanityUser) {
-                dispatchSnackbar({ type: "isSnackbarOpen", payload: true });
-                dispatchSnackbar({
-                    type: "snackbarMsg",
-                    payload: errorMsg.duplicateError,
-                });
+                setIsSnackbarOpen(true);
+                setSnackbarMsg(errorMsg.duplicateError);
+                setSnackbarSeverity("error");
                 return;
             }
 
@@ -111,14 +102,12 @@ export default function SignUp() {
             });
 
             // open the snackbar
-            dispatchSnackbar({ type: "isSnackbarOpen", payload: true });
+            setIsSnackbarOpen(true);
 
             // if the user is created successfully:
             if (response.status === 200) {
-                dispatchSnackbar({
-                    type: "snackbarMsg",
-                    payload: successMsg,
-                });
+                setSnackbarMsg(successMsg);
+                setSnackbarSeverity("success");
 
                 // set the cookies and route to the main page
                 window.localStorage.setItem(
@@ -139,10 +128,8 @@ export default function SignUp() {
                 return () => clearTimeout(timeout);
             } else {
                 // if there were an error upon creating the user:
-                dispatchSnackbar({
-                    type: "snackbarMsg",
-                    payload: errorMsg.postError,
-                });
+                setSnackbarMsg(errorMsg.postError);
+                setSnackbarSeverity("error");
             }
         }
     };
@@ -281,22 +268,6 @@ export default function SignUp() {
                     <GoogleIcon sx={{ ml: { xs: 2 } }} />
                 </Button>
             </Stack>
-
-            <SnackbarWrapper
-                isOpen={snackbarState.isSnackbarOpen}
-                setIsOpen={() =>
-                    dispatchSnackbar({
-                        type: "isSnackbarOpen",
-                        payload: false,
-                    })
-                }
-                severity={
-                    snackbarState.snackbarMsg === successMsg
-                        ? "success"
-                        : "error"
-                }
-                text={snackbarState.snackbarMsg}
-            />
         </Stack>
     );
 }

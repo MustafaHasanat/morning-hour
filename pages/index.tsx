@@ -2,49 +2,70 @@ import DiscoverItems from "@/components/landingPage/discoverItems";
 import FeaturedItemBox from "@/components/landingPage/featuredItemBox";
 import BestSellingSlider from "@/components/shared/bestSellingSlider";
 import TitleBox from "@/components/shared/titleBox";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { BooksObjectProps } from "@/context/items/itemsContextProvider";
 import { Item } from "@/types/item";
-import { getAllItems, getItemByCondition } from "@/utils/sanity/item";
-import { itemsActions } from "@/utils/store";
+import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
+import { getAllItems } from "@/utils/sanity/item";
+import { getUserByCondition } from "@/utils/sanity/user";
 import { Stack } from "@mui/material";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useContext, useEffect } from "react";
 
 export const getStaticProps = async (): Promise<{
     props: {
         items: Item[];
-        featuredItem: Item;
     };
 }> => {
     const items = await getAllItems();
-    // get the one featured book
-    const featuredItem = await getItemByCondition({
-        id: "11ee9793-51b3-4aaa-bcab-2bde936934c2",
-    });
 
     return {
-        props: { items, featuredItem },
+        props: { items },
     };
 };
 
 interface HomeProps {
     items: Item[];
-    featuredItem: Item;
 }
 
-export default function Home({ items, featuredItem }: HomeProps) {
-    const dispatch = useDispatch();
+export default function Home({ items }: HomeProps) {
+    const { setBooksObject } = useContext(ItemsContext);
 
     useEffect(() => {
-        window.localStorage.removeItem("splash");
+        localStorage.removeItem("splash");
+
+        const getUser = async () => {
+            const userCookie = localStorage.getItem("user");
+
+            if (userCookie) {
+                const localUser = JSON.parse(userCookie);
+                const sanityUser = await getUserByCondition({
+                    id: localUser.id,
+                });
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(sanityUserToLocalUser(sanityUser))
+                );
+            }
+        };
+
+        getUser();
     }, []);
 
+    // set the context
     useEffect(() => {
-        dispatch(itemsActions.setBestSelling(items));
-    }, [dispatch, items]);
+        const booksObject: BooksObjectProps = {};
+
+        items.forEach((item) => {
+            booksObject[`${item._id}`] = item;
+        });
+
+        setBooksObject(booksObject);
+    }, [items, setBooksObject]);
 
     return (
         <Stack>
-            <FeaturedItemBox item={featuredItem} />
+            <FeaturedItemBox />
 
             <Stack
                 id="best-selling-section"
@@ -61,7 +82,7 @@ export default function Home({ items, featuredItem }: HomeProps) {
                 <BestSellingSlider />
             </Stack>
 
-            <DiscoverItems items={items} />
+            <DiscoverItems />
         </Stack>
     );
 }

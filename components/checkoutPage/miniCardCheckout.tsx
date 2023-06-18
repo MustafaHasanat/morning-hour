@@ -1,21 +1,23 @@
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
-import CustomDivider from "./customDivider";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { changeQuantCartItem, removeFromCart } from "@/utils/sanity/user";
+import CustomDivider from "../shared/customDivider";
+import { CartItem } from "@/types/item";
 import useUserData from "@/hooks/useUserData";
 import { useContext } from "react";
-import { CartItem } from "@/types/item";
 import { ItemsContext } from "@/context/items/itemsContext";
+import { changeQuantCartItem, removeFromCart } from "@/utils/sanity/user";
+import { motion } from "framer-motion";
 
 interface MiniCardProps {
     cartItem: CartItem;
+    paymentIsOpen: boolean;
 }
 
-const MiniCard = ({ cartItem }: MiniCardProps) => {
-    const { setCartItems, cartItems } = useContext(ItemsContext);
+const MiniCardCheckout = ({ cartItem, paymentIsOpen }: MiniCardProps) => {
     const user = useUserData();
+    const { setCartItems, cartItems } = useContext(ItemsContext);
 
     const handleRemove = () => {
         if (user) {
@@ -59,11 +61,16 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
                 <Typography
                     fontWeight="bold"
                     textTransform="capitalize"
-                    fontSize={{ xs: "0.9rem" }}
+                    fontSize={{ xs: "0.9rem", lg: "1.6rem" }}
                 >
                     {key}:
                 </Typography>
-                <Typography fontSize={{ xs: "1rem" }}>{value}</Typography>
+                <Typography
+                    fontSize={{ xs: "1rem", lg: "1.6rem" }}
+                    sx={{ opacity: 0.7 }}
+                >
+                    {value}
+                </Typography>
             </Stack>
         );
     };
@@ -71,15 +78,19 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
     const quantButton = (sign: "+" | "-") => {
         return (
             <Box
-                component="div"
+                component={motion.button}
+                initial={{ scale: 1 }}
+                whileHover={{ scale: paymentIsOpen ? 1 : 1.2 }}
+                whileTap={{ scale: paymentIsOpen ? 1 : 0.7 }}
+                disabled={paymentIsOpen}
                 sx={{
-                    cursor: "pointer",
+                    cursor: paymentIsOpen ? "unset" : "pointer",
                     transition: "0.3s ease",
-                    bgcolor: "background.paper",
+                    bgcolor: "transparent",
                     borderRadius: "50%",
-                    width: "25px",
-                    height: "25px",
-                    "&:hover": {},
+                    width: "40px",
+                    aspectRatio: "1 / 1",
+                    border: 0,
                 }}
                 onClick={() => {
                     handleChangeQuant(sign);
@@ -106,17 +117,17 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
 
     const quantBox = () => {
         return (
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={5} alignItems="center">
                 <Typography
                     fontWeight="bold"
                     textTransform="capitalize"
-                    fontSize={{ xs: "0.9rem" }}
+                    fontSize={{ xs: "0.9rem", lg: "1.6rem" }}
                 >
                     quant
                 </Typography>
 
                 {quantButton("+")}
-                <Typography fontSize={{ xs: "1.2rem" }}>
+                <Typography fontSize={{ xs: "1.2rem", lg: "1.6rem" }}>
                     {cartItem.quantity}
                 </Typography>
                 {quantButton("-")}
@@ -128,16 +139,24 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
         <Stack alignItems="end" pb={2}>
             <Stack
                 direction={{ xs: "column", lg: "row" }}
-                justifyContent="space-evenly"
+                justifyContent="start"
                 width={{ xs: "100%" }}
+                spacing={5}
             >
                 <Avatar
                     src={cartItem.item.image.asset.url}
                     variant="rounded"
-                    sx={{ height: "5rem", width: "5rem" }}
+                    sx={{
+                        height: "10rem",
+                        width: "10rem",
+                        img: {
+                            height: "100%",
+                            width: "auto",
+                        },
+                    }}
                 />
 
-                <Stack spacing="5px">
+                <Stack spacing={2}>
                     {textPair("title", cartItem.item.title)}
                     {quantBox()}
                     {textPair("price", `${cartItem.item.currentPrice} JOD`)}
@@ -146,8 +165,15 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
 
             <Button
                 variant="outlined"
+                disabled={paymentIsOpen}
                 endIcon={<ClearIcon />}
-                sx={{ mb: 1, mt: 1, py: 0, px: 1, textTransform: "lowercase" }}
+                sx={{
+                    my: 1,
+                    py: 1,
+                    px: 4,
+                    textTransform: "lowercase",
+                    fontSize: "1.3rem",
+                }}
                 onClick={handleRemove}
             >
                 remove
@@ -158,4 +184,4 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
     );
 };
 
-export default MiniCard;
+export default MiniCardCheckout;

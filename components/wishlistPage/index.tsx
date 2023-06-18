@@ -1,40 +1,29 @@
 import { Item } from "@/types/item";
 import filterArrayByWord from "@/utils/helpers/filterArrayByWord";
 import { Button, Stack, Typography } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { itemsActions } from "@/utils/store";
+import { ItemsContext } from "@/context/items/itemsContext";
 
-const WishlistBox = () => {
-    const { whishList, searchTerm } = useSelector(
-        (state: {
-            itemsReducer: { whishList: Item[]; searchTerm: string };
-        }) => {
-            return {
-                whishList: state.itemsReducer.whishList,
-                searchTerm: state.itemsReducer.searchTerm,
-            };
-        }
-    );
-
-    const dispatch = useDispatch();
-    const [filteredItems, setFilteredItems] = useState(whishList);
+const WishlistBox = ({ wishlist }: { wishlist: Item[] }) => {
+    const [filteredItems, setFilteredItems] = useState(wishlist);
+    const { searchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
         setFilteredItems(
             filterArrayByWord({
-                array: whishList,
+                array: wishlist,
                 arrayType: "item",
                 searchTerm,
             })
         );
-    }, [searchTerm, whishList]);
+    }, [searchTerm, wishlist]);
 
     const handleClearButton = () => {
-        dispatch(itemsActions.setWhishList([]));
+        localStorage.removeItem("wishlist");
+        setFilteredItems([]);
     };
 
     return (
@@ -45,12 +34,12 @@ const WishlistBox = () => {
                 color="primary"
                 textTransform="capitalize"
             >
-                {filteredItems.length !== 0
+                {filteredItems?.length !== 0
                     ? "your wishlist items"
                     : "your wishlist is empty!"}
             </Typography>
 
-            {filteredItems.length === 0 ? (
+            {filteredItems?.length === 0 ? (
                 <Stack mb={5} spacing={5} alignItems="center">
                     <Typography fontSize={{ xs: "1.5rem" }} color="secondary">
                         go add some items to your wishlist
@@ -73,7 +62,7 @@ const WishlistBox = () => {
                             my: 1,
                             textTransform: "lowercase",
                             width: "fit-content",
-                            fontSize: {xs: "1.2rem"}
+                            fontSize: { xs: "1.2rem" },
                         }}
                         onClick={handleClearButton}
                         color="secondary"

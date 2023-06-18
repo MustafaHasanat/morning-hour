@@ -1,53 +1,61 @@
 import { Avatar, Badge, Button, Stack } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { ReactNode, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { CartItemProps } from "@/utils/store/itemsSlice";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
-import { getUserByCondition } from "@/utils/sanity/user";
-import { LocalUser } from "@/types/user";
-import { useSession } from "next-auth/react";
+import useUserData from "@/hooks/useUserData";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import { CartItem } from "@/types/item";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { useRouter } from "next/router";
 
 interface ButtonsSetProps {
-    setDropDownContents: React.Dispatch<
-        React.SetStateAction<"" | "cart" | "menu">
-    >;
+    setDropDownContents: Dispatch<SetStateAction<"" | "cart" | "menu">>;
 }
 
 const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
+    const { cartItems, setCartItems } = useContext(ItemsContext);
     const [menuBtn, setMenuBtn] = useState(false);
-    const [avatarImage, setAvatarImage] = useState("none");
-    const { data: session } = useSession();
+    const [updated, setUpdated] = useState(false);
+    const router = useRouter();
 
-    const [user, setUser] = useState<LocalUser | null>(null);
+    const user = useUserData();
 
-    useEffect(() => {
-        const localUser = window.localStorage.getItem("user");
-
-        if (localUser) {
-            const userObj: LocalUser = JSON.parse(localUser);
-
-            if (userObj && userObj.avatar) {
-                setAvatarImage(userObj.avatar.asset.url);
-                setUser(userObj);
-            }
-        }
-    }, []);
-
-    const cartItems = useSelector(
-        (state: { itemsReducer: { cartItems: CartItemProps[] } }) =>
-            state.itemsReducer.cartItems
-    );
+    const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =
+        useContext(PageVarsContext);
 
     const { itemsCount } = getTotalPrice(cartItems);
+
+    useEffect(() => {
+        if (user?.cart && !updated) {
+            const cart = user.cart || [];
+
+            setCartItems(
+                cart.map((item) => {
+                    return {
+                        ...item,
+                        key: item.item._id,
+                    };
+                })
+            );
+            setUpdated(true);
+        }
+    }, [setCartItems, updated, user]);
 
     const headerIconWrapper = (
         child: ReactNode,
         onMouseEnter: () => void,
         onMouseLeave: () => void,
-        onClick: () => void
+        onClick: () => void,
+        disabled: boolean
     ) => {
         return (
             <Button
@@ -55,7 +63,9 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     height: { xs: "3.5rem" },
                     width: "auto",
                     zIndex: 11,
+                    opacity: disabled ? 0.5 : 1,
                 }}
+                disabled={disabled}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
@@ -84,7 +94,7 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     }}
                     badgeContent={itemsCount}
                     color="error"
-                    invisible={cartItems.length === 0}
+                    invisible={cartItems?.length === 0}
                 >
                     <ShoppingCartRoundedIcon
                         sx={{
@@ -104,15 +114,25 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     setCartBtnIsHovered(false);
                 },
                 () => {
-                    setDropDownContents((prev) =>
-                        prev === "cart" ? "" : "cart"
-                    );
-                }
+                    if (cartItems && cartItems.length !== 0) {
+                        setDropDownContents((prev) =>
+                            prev === "cart" ? "" : "cart"
+                        );
+                    } else {
+                        setIsSnackbarOpen(true);
+                        setSnackbarMsg("Cart is empty!");
+                        setSnackbarSeverity("warning");
+                    }
+                },
+                router.asPath === "/account/checkout"
             )}
 
             {headerIconWrapper(
                 user ? (
-                    <Avatar alt="user avatar" src={avatarImage} />
+                    <Avatar
+                        alt="user avatar"
+                        src={user?.avatar ? `${user?.avatar.asset.url}` : ""}
+                    />
                 ) : (
                     <MenuRoundedIcon
                         sx={{
@@ -132,7 +152,8 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     setDropDownContents((prev) =>
                         prev === "menu" ? "" : "menu"
                     );
-                }
+                },
+                false
             )}
         </Stack>
     );

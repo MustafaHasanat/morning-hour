@@ -14,7 +14,11 @@ interface DropDownProps {
     >;
 }
 
-const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
+const DropDown = ({
+    isOpen,
+    contents,
+    setDropDownContents,
+}: DropDownProps) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -47,7 +51,9 @@ const DropDown = ({ isOpen, contents, setDropDownContents }: DropDownProps) => {
             {contents === "menu" ? (
                 <MenuContents />
             ) : contents === "cart" ? (
-                <CartContents setDropDownContents={setDropDownContents} />
+                <CartContents
+                    setDropDownContents={setDropDownContents}
+                />
             ) : null}
         </Stack>
     );

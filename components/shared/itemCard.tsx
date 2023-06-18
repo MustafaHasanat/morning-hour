@@ -1,78 +1,135 @@
 import theme from "@/styles/theme";
-import { Item } from "@/types/item";
+import { CartItem, Item } from "@/types/item";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import ExpandedWidget from "./expandedWidget";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import { itemsActions } from "@/utils/store";
-import { CartItemProps } from "@/utils/store/itemsSlice";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import {
+    addToCart,
+    addToWishlist,
+    changeQuantCartItem,
+    removeFromWishlist,
+} from "@/utils/sanity/user";
+import useUserData from "@/hooks/useUserData";
+import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 interface ItemCardProps {
     item: Item;
 }
 
 const ItemCard = ({ item }: ItemCardProps) => {
+    const router = useRouter();
     const [isButtonHovered, setIsButtonHovered] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isInCart, setIsInCart] = useState(false);
+    const [updated, setUpdated] = useState(false);
 
-    const router = useRouter();
+    const { cartItems, setCartItems, wishlist, setWishlist } =
+        useContext(ItemsContext);
 
-    const dispatch = useDispatch();
-    const { whishList, cartItems } = useSelector(
-        (state: {
-            itemsReducer: { whishList: Item[]; cartItems: CartItemProps[] };
-        }) => {
-            return {
-                whishList: state.itemsReducer.whishList,
-                cartItems: state.itemsReducer.cartItems,
-            };
-        }
+    const [cartItem, setCartItem] = useState<CartItem>(
+        cartItems.filter((cartItemObj) => {
+            if (cartItemObj.item._id === item._id) {
+                return cartItemObj;
+            }
+        })[0]
     );
 
-    useEffect(() => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
+    const user = sanityUserToLocalUser(useUserData());
 
-        if (matchedList.length !== 0) {
-            setIsFavorite(true);
-        } else {
-            setIsFavorite(false);
+    const itemData = {
+        userId: `${user.id}`,
+        itemId: `${item?._id}`,
+    };
+
+    const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =
+        useContext(PageVarsContext);
+
+    const {
+        cartSuccessMsg,
+        favSuccessMsgAdd,
+        favSuccessMsgRemove,
+        userErrorMsg,
+    } = {
+        cartSuccessMsg: "Book is added to cart.",
+        favSuccessMsgAdd: "Book is now on your wishlist.",
+        favSuccessMsgRemove: "Book is removed from wishlist.",
+        userErrorMsg: "You have to sign in first!",
+    };
+
+    useEffect(() => {
+        if (user.wishlist && user.cart && !updated) {
+            const isWishlisted = user.wishlist
+                ? user.wishlist.includes(`${item?._id}`)
+                : false;
+            const isCarted = user.cart
+                ? user.cart.includes(`${item?._id}`)
+                : false;
+
+            setIsFavorite(isWishlisted);
+            setIsInCart(isCarted);
+            setUpdated(true);
         }
-    }, [item._id, whishList]);
+    }, [item?._id, updated, user]);
 
     const handleCartButton = () => {
-        const matchedList = cartItems.filter((cartItem) => {
-            if (cartItem.item._id === item._id) {
-                return cartItem;
-            }
-        });
+        if (!user) {
+            setIsSnackbarOpen(true);
+            setSnackbarMsg(userErrorMsg);
+            setSnackbarSeverity("error");
+            return;
+        }
 
-        if (matchedList.length === 0) {
-            dispatch(itemsActions.addToCartItems({ item, quantity: 1 }));
-        } else {
-            dispatch(itemsActions.changeQuantCartItem({ item, sign: "+" }));
+        if (user.id) {
+            if (isInCart) {
+                // increment the item in cart
+                changeQuantCartItem({
+                    ...itemData,
+                    sign: "+",
+                    curQuant: cartItem.quantity,
+                });
+                setSnackbarMsg(favSuccessMsgRemove);
+            } else {
+                // add the item to cart
+                addToCart(itemData);
+                setIsInCart(true);
+                setSnackbarMsg(cartSuccessMsg);
+            }
+
+            setIsSnackbarOpen(true);
+            setSnackbarSeverity("success");
         }
     };
 
     const handleFavoriteButton = () => {
-        const matchedList = whishList.filter((whishListItem) => {
-            if (whishListItem._id === item._id) {
-                return whishListItem;
-            }
-        });
+        if (!user) {
+            setIsSnackbarOpen(true);
+            setSnackbarMsg(userErrorMsg);
+            setSnackbarSeverity("error");
+            return;
+        }
 
-        if (matchedList.length === 0) {
-            dispatch(itemsActions.addToWhishList(item));
-        } else {
-            dispatch(itemsActions.deleteFromWhishList(item));
+        if (user.id) {
+            if (isFavorite) {
+                // remove the item from wishlist
+                removeFromWishlist(itemData);
+                setIsFavorite(false);
+                setSnackbarMsg(favSuccessMsgRemove);
+            } else {
+                // add the item to wishlist
+                addToWishlist(itemData);
+                setIsFavorite(true);
+                setSnackbarMsg(favSuccessMsgAdd);
+            }
+
+            setIsSnackbarOpen(true);
+            setSnackbarSeverity("success");
         }
     };
 
@@ -110,17 +167,19 @@ const ItemCard = ({ item }: ItemCardProps) => {
                 }}
                 onClick={() => {
                     router.push(
-                        `/product/${itemTitleSerializer(
-                            item.title,
-                            "underscored"
-                        )}`
+                        item
+                            ? `/product/${itemTitleSerializer(
+                                  item.title,
+                                  "underscored"
+                              )}`
+                            : "/"
                     );
                 }}
             >
                 <Avatar
                     variant="rounded"
-                    src={item.image.asset.url}
-                    alt={`main card: ${item.title}`}
+                    src={item ? item.image.asset.url : ""}
+                    alt={`main card: ${item && item.title}`}
                     sx={{
                         width: "fit-content",
                         height: "100%",
@@ -132,11 +191,11 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     fontSize={{ xs: "1.2rem" }}
                     textAlign="center"
                 >
-                    {item.title}
+                    {item?.title}
                 </Typography>
 
                 <Stack direction="row" spacing={2} mt={{ xs: 2 }}>
-                    {item.oldPrice !== 0 && (
+                    {item?.oldPrice !== 0 && (
                         <Typography
                             fontWeight="bold"
                             fontSize={{ xs: "1rem" }}
@@ -145,12 +204,12 @@ const ItemCard = ({ item }: ItemCardProps) => {
                                 textDecoration: "line-through",
                             }}
                         >
-                            {item.oldPrice} JOD
+                            {item?.oldPrice} JOD
                         </Typography>
                     )}
 
                     <Typography fontWeight="bold" fontSize={{ xs: "1rem" }}>
-                        {item.currentPrice} JOD
+                        {item?.currentPrice} JOD
                     </Typography>
                 </Stack>
             </Stack>
@@ -189,11 +248,14 @@ const ItemCard = ({ item }: ItemCardProps) => {
                                     cursor: "pointer",
                                     height: "80%",
                                     width: "80%",
+                                    color: isInCart
+                                        ? item.primaryColor
+                                        : "secondary",
                                 }}
                             />
                         }
                         iconOnClick={handleCartButton}
-                        colorHovered={item.primaryColor}
+                        colorHovered={item?.primaryColor}
                         extraSX={{
                             cursor: "unset",
                         }}
@@ -210,7 +272,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     animate={{
                         opacity: isFavorite ? 1 : 0.5,
                         color: isFavorite
-                            ? item.primaryColor
+                            ? item?.primaryColor
                             : theme.palette.secondary.main,
                     }}
                     whileHover={{

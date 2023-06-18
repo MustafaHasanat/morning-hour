@@ -1,16 +1,33 @@
 import theme from "@/styles/theme";
 import { Avatar, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DropDown from "./dropDown";
 import Navbar from "./navbar";
 import ButtonsSet from "./buttonsSet";
 import SearchBox from "./searchBox";
 import Link from "next/link";
+import useUserData from "@/hooks/useUserData";
+import { ItemsContext } from "@/context/items/itemsContext";
 
 const Header = () => {
+    const { cartItems, setCartItems } = useContext(ItemsContext);
     const [dropDownContents, setDropDownContents] = useState<
         "cart" | "menu" | ""
     >("");
+
+    const user = useUserData();
+
+    useEffect(() => {
+        if (user && user.cart) {
+            setCartItems(user?.cart);
+        }
+    }, [setCartItems, user]);
+
+    useEffect(() => {
+        if (cartItems && cartItems.length === 0) {
+            setDropDownContents("");
+        }
+    }, [cartItems]);
 
     return (
         <Stack

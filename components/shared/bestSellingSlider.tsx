@@ -1,11 +1,15 @@
 import { Item } from "@/types/item";
 import { Stack } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
-import { useSelector } from "react-redux";
 import { keyframes } from "@mui/material/styles";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { filterBestSellingItems } from "@/utils/helpers/itemsObjectHandler";
 
 const BestSellingSlider = () => {
+    const [bestSellingBooks, setBestSellingBooks] = useState<Item[]>([]);
+    const { booksObject } = useContext(ItemsContext);
+
     const cardWidth = 15;
     const gapLength = 5;
 
@@ -14,13 +18,9 @@ const BestSellingSlider = () => {
         100% { left: 90vw };
     `;
 
-    const { bestSelling } = useSelector(
-        (state: { itemsReducer: { bestSelling: Item[] } }) => {
-            return {
-                bestSelling: state.itemsReducer.bestSelling,
-            };
-        }
-    );
+    useEffect(() => {
+        setBestSellingBooks(filterBestSellingItems(booksObject));
+    }, [booksObject]);
 
     return (
         <Stack
@@ -51,10 +51,10 @@ const BestSellingSlider = () => {
                 }}
             >
                 {[
-                    ...bestSelling,
-                    ...bestSelling,
-                    ...bestSelling,
-                    ...bestSelling,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
+                    ...bestSellingBooks,
                 ].map((item, index) => {
                     return (
                         <Fragment key={`${index}`}>
