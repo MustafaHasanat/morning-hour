@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import HeadTag from "../metadata/headTag";
 import Header from "../header";
 import Footer from "../footer";
@@ -13,7 +13,13 @@ interface LayoutComponentProps {
 
 const LayoutComponent = ({ children }: LayoutComponentProps) => {
     const router = useRouter();
-    const { setHeadTitle } = useContext(PageVarsContext);
+    const {
+        setHeadTitle,
+        isSnackbarOpen,
+        setIsSnackbarOpen,
+        snackbarMsg,
+        snackbarSeverity,
+    } = useContext(PageVarsContext);
 
     // map the route name to the corresponding title
     const getTitle = (route: string): string => {
@@ -44,6 +50,22 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
             <DialogBox />
             <Box component="main">{children}</Box>
             <Footer />
+
+            <Snackbar
+                open={isSnackbarOpen}
+                autoHideDuration={5000}
+                onClose={() => {
+                    setIsSnackbarOpen(false);
+                }}
+            >
+                <Alert
+                    severity={snackbarSeverity}
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackbarMsg}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

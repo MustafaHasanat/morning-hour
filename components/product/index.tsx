@@ -1,11 +1,11 @@
-import { Item } from "@/types/item";
+import { CartItem, Item } from "@/types/item";
 import { Divider, Stack } from "@mui/material";
 import ImagesFlipper from "./imagesFlipper";
 import DetailsBox from "./detailsBox";
 import ReviewsBox from "./reviewsBox";
 import { Review } from "@/types/review";
-import { useContext, useEffect, useState } from "react";
-import { ItemsContext } from "@/context/items/itemsContext";
+import { useEffect, useState } from "react";
+import useUserData from "@/hooks/useUserData";
 
 interface BookPageProps {
     item: Item;
@@ -14,10 +14,17 @@ interface BookPageProps {
 
 const BookPage = ({ item, reviews }: BookPageProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
-    const { wishlistItems } = useContext(ItemsContext);
+    const [wishlist, setWishlist] = useState<Item[]>([]);
+    const user = useUserData();
 
     useEffect(() => {
-        const matchedList = wishlistItems.filter((wishlistItem) => {
+        if (user && user.wishlist) {
+            setWishlist(user.wishlist);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const matchedList = wishlist.filter((wishlistItem) => {
             if (wishlistItem._id === item._id) {
                 return wishlistItem._id;
             }
@@ -28,7 +35,7 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
         } else {
             setIsFavorite(false);
         }
-    }, [item._id, wishlistItems]);
+    }, [item._id, wishlist]);
 
     return (
         <Stack px={{ xs: 10 }} py={{ xs: 10 }} width={{ xs: "100%" }}>
@@ -45,6 +52,7 @@ const BookPage = ({ item, reviews }: BookPageProps) => {
                     reviews={reviews}
                     isFavorite={isFavorite}
                     setIsFavorite={setIsFavorite}
+                    user={user}
                 />
             </Stack>
 

@@ -10,35 +10,45 @@ import {
     useState,
 } from "react";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
-import { LocalUser } from "@/types/user";
+import useUserData from "@/hooks/useUserData";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import { CartItem } from "@/types/item";
 import { ItemsContext } from "@/context/items/itemsContext";
 
 interface ButtonsSetProps {
     setDropDownContents: Dispatch<SetStateAction<"" | "cart" | "menu">>;
 }
 
-const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
+const ButtonsSet = ({
+    setDropDownContents,
+}: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
+    const { cartItems, setCartItems } = useContext(ItemsContext);
     const [menuBtn, setMenuBtn] = useState(false);
-    const [avatarImage, setAvatarImage] = useState("none");
-    const [user, setUser] = useState<LocalUser | null>(null);
+    const [updated, setUpdated] = useState(false);
 
-    const { cartItems } = useContext(ItemsContext);
+    const user = useUserData();
 
-    useEffect(() => {
-        const localUser = window.localStorage.getItem("user");
-
-        if (localUser) {
-            const userObj: LocalUser = JSON.parse(localUser);
-
-            if (userObj && userObj.avatar) {
-                setAvatarImage(userObj.avatar.asset.url);
-                setUser(userObj);
-            }
-        }
-    }, []);
+    const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =
+        useContext(PageVarsContext);
 
     const { itemsCount } = getTotalPrice(cartItems);
+
+    useEffect(() => {
+        if (user?.cart && !updated) {
+            const cart = user.cart || [];
+
+            setCartItems(
+                cart.map((item) => {
+                    return {
+                        ...item,
+                        key: item.item._id,
+                    };
+                })
+            );
+            setUpdated(true);
+        }
+    }, [setCartItems, updated, user]);
 
     const headerIconWrapper = (
         child: ReactNode,
@@ -81,7 +91,7 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     }}
                     badgeContent={itemsCount}
                     color="error"
-                    invisible={cartItems.length === 0}
+                    invisible={cartItems?.length === 0}
                 >
                     <ShoppingCartRoundedIcon
                         sx={{
@@ -101,15 +111,24 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     setCartBtnIsHovered(false);
                 },
                 () => {
-                    setDropDownContents((prev) =>
-                        prev === "cart" ? "" : "cart"
-                    );
+                    if (cartItems && cartItems.length !== 0) {
+                        setDropDownContents((prev) =>
+                            prev === "cart" ? "" : "cart"
+                        );
+                    } else {
+                        setIsSnackbarOpen(true);
+                        setSnackbarMsg("Cart is empty!");
+                        setSnackbarSeverity("warning");
+                    }
                 }
             )}
 
             {headerIconWrapper(
                 user ? (
-                    <Avatar alt="user avatar" src={avatarImage} />
+                    <Avatar
+                        alt="user avatar"
+                        src={user?.avatar ? `${user?.avatar.asset.url}` : ""}
+                    />
                 ) : (
                     <MenuRoundedIcon
                         sx={{

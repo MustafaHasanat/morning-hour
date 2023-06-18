@@ -1,10 +1,25 @@
-import { Button, List, Stack, Typography } from "@mui/material";
-import { Dispatch, Fragment, SetStateAction, useContext, useEffect, useState } from "react";
+import {
+    Button,
+    CircularProgress,
+    List,
+    Stack,
+    Typography,
+} from "@mui/material";
+import {
+    Dispatch,
+    Fragment,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import MiniCard from "../shared/miniCard";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
 import { useRouter } from "next/router";
+import { clearCart } from "@/utils/sanity/user";
+import useUserData from "@/hooks/useUserData";
 import { ItemsContext } from "@/context/items/itemsContext";
 
 interface CartContentsProps {
@@ -14,10 +29,12 @@ interface CartContentsProps {
 const CartContents = ({ setDropDownContents }: CartContentsProps) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const { cartItems, setCartItems } = useContext(ItemsContext);
+    const user = useUserData();
     const router = useRouter();
 
     const handleClearButton = () => {
-        setCartItems([])
+        setCartItems([]);
+        clearCart({ userId: `${user?._id}` });
         setTimeout(() => {
             setDropDownContents("");
         }, 400);
@@ -30,17 +47,27 @@ const CartContents = ({ setDropDownContents }: CartContentsProps) => {
 
     return (
         <List sx={{ height: "60%", zIndex: 11 }}>
-            <Stack height="100%" overflow="scroll">
-                {cartItems.map((item, index) => {
-                    return (
-                        <Fragment
-                            key={`cart mini cards header container number ${index}`}
-                        >
-                            <MiniCard cartItem={item} />
-                        </Fragment>
-                    );
-                })}
-            </Stack>
+            {cartItems && cartItems.length !== 0 ? (
+                <Stack height="100%" overflow="scroll">
+                    {cartItems.map((cartItem, index) => {
+                        return (
+                            <Fragment
+                                key={`cart mini cards header container number ${index}`}
+                            >
+                                <MiniCard cartItem={cartItem} />
+                            </Fragment>
+                        );
+                    })}
+                </Stack>
+            ) : (
+                <Stack
+                    height="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <CircularProgress size={80} />
+                </Stack>
+            )}
 
             <Stack
                 direction="row"

@@ -7,22 +7,22 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { ItemsContext } from "@/context/items/itemsContext";
 
-const WishlistBox = ({ whishList }: { whishList: Item[] }) => {
-    const [filteredItems, setFilteredItems] = useState(whishList);
+const WishlistBox = ({ wishlist }: { wishlist: Item[] }) => {
+    const [filteredItems, setFilteredItems] = useState(wishlist);
     const { searchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
         setFilteredItems(
             filterArrayByWord({
-                array: whishList,
+                array: wishlist,
                 arrayType: "item",
                 searchTerm,
             })
         );
-    }, [searchTerm, whishList]);
+    }, [searchTerm, wishlist]);
 
     const handleClearButton = () => {
-        localStorage.removeItem("whishList");
+        localStorage.removeItem("wishlist");
         setFilteredItems([]);
     };
 

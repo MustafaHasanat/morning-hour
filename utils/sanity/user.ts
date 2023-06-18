@@ -8,7 +8,7 @@ const userContents = `
     phoneNumber,
     email,
     password,
-    recentVisited->{
+    recentVisited[]->{
         _id,
         title,
         currentPrice,
@@ -20,8 +20,8 @@ const userContents = `
                 url
             }
         },
-    }[],
-    whishList->{
+    },
+    wishlist[]->{
         _id,
         title,
         currentPrice,
@@ -33,21 +33,24 @@ const userContents = `
                 url
             }
         },
-    }[],
-    cart->{
-        _id,
-        title,
-        currentPrice,
-        oldPrice,
-        rating,
-        category,
-        image {
-            asset->{
-                url
-            }
+    },
+    cart {
+        item->{
+            _id,
+            title,
+            currentPrice,
+            oldPrice,
+            rating,
+            category,
+            image {
+                asset->{
+                    url
+                }
+            },
         },
+        quantity,
     }[],
-    orders->{
+    orders[]->{
         items {
             quantity,
             item->{
@@ -63,7 +66,7 @@ const userContents = `
                 },
             },
         }[],
-    }[],
+    },
     address,
     isAdmin,
     paymentMethods {
@@ -111,6 +114,143 @@ export async function createUser({
                 userName,
                 email,
                 password,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function addToWishlist({
+    userId,
+    itemId,
+}: {
+    userId: string;
+    itemId: string;
+}) {
+    try {
+        return await fetch("/api/user/addToWishlist", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                itemId,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function removeFromWishlist({
+    userId,
+    itemId,
+}: {
+    userId: string;
+    itemId: string;
+}) {
+    try {
+        return await fetch("/api/user/removeFromWishlist", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                itemId,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function addToCart({
+    userId,
+    itemId,
+}: {
+    userId: string;
+    itemId: string;
+}) {
+    try {
+        return await fetch("/api/user/addToCart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                itemId,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function removeFromCart({
+    userId,
+    itemId,
+}: {
+    userId: string;
+    itemId: string;
+}) {
+    try {
+        return await fetch("/api/user/removeFromCart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                itemId,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function changeQuantCartItem({
+    userId,
+    itemId,
+    sign,
+    curQuant,
+}: {
+    userId: string;
+    itemId: string;
+    sign: "+" | "-";
+    curQuant: number;
+}) {
+    try {
+        return await fetch("/api/user/changeQuantCartItem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                itemId,
+                sign,
+                curQuant,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function clearCart({ userId }: { userId: string }) {
+    try {
+        return await fetch("/api/user/clearCart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
             }),
         });
     } catch (err: any) {

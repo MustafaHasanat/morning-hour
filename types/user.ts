@@ -8,8 +8,11 @@ export type User = {
     email: string;
     password: string;
     recentVisited: Item[];
-    whishList: Item[];
-    cart: Item[];
+    wishlist: Item[];
+    cart: {
+        item: Item;
+        quantity: number;
+    }[];
     orders: Order[];
     address: string;
     isAdmin: boolean;
@@ -29,10 +32,10 @@ export type LocalUser = {
     phoneNumber?: number;
     email?: string;
     password?: string;
-    recentVisited?: Item[];
-    whishList?: Item[];
-    cart?: Item[];
-    orders?: Order[];
+    recentVisited?: string[];
+    wishlist?: string[];
+    cart?: string[];
+    orders?: string[];
     address?: string;
     isAdmin?: boolean;
     paymentMethods?: {

@@ -97,6 +97,7 @@ const MenuContents = () => {
                     sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
                     onClick={() => {
                         window.localStorage.removeItem("user");
+                        window.localStorage.removeItem("userId");
                         signOut();
                         router.push("/");
                     }}

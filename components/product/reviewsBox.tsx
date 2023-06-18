@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import ReviewStar from "./reviewStar";
-import { Fragment, useReducer, useRef, useState } from "react";
+import { Fragment, useContext, useReducer, useRef, useState } from "react";
 import theme from "@/styles/theme";
 import { createReview } from "@/utils/sanity/review";
 import { Item } from "@/types/item";
 import { Review } from "@/types/review";
 import StarIcon from "@mui/icons-material/Star";
-import SnackbarWrapper from "../shared/snackbarWrapper";
 import { motion } from "framer-motion";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 
 interface ReviewsBoxProps {
     item: Item;
@@ -39,11 +39,11 @@ export type ReducerActionProps =
 
 const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
     const fieldRef = useRef<HTMLInputElement | null>(null);
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-    const [snackbarMsg, setSnackbarMsg] = useState("");
+
+    const { isSnackbarOpen, setIsSnackbarOpen, setSnackbarMsg } =
+        useContext(PageVarsContext);
 
     const [maxReviews, setMaxReviews] = useState(5);
-
     const [starsState, dispatchStars] = useReducer(
         (state: ReducerProps, action: ReducerActionProps) => {
             switch (action.type) {
@@ -303,13 +303,6 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                 >
                     add the review
                 </Button>
-
-                <SnackbarWrapper
-                    isOpen={isSnackbarOpen}
-                    setIsOpen={setIsSnackbarOpen}
-                    severity={snackbarMsg === successMsg ? "success" : "error"}
-                    text={snackbarMsg}
-                />
             </Stack>
         </Stack>
     );

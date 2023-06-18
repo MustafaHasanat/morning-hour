@@ -5,7 +5,9 @@ import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { BooksObjectProps } from "@/context/items/itemsContextProvider";
 import { Item } from "@/types/item";
+import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
 import { getAllItems } from "@/utils/sanity/item";
+import { getUserByCondition } from "@/utils/sanity/user";
 import { Stack } from "@mui/material";
 import { useContext, useEffect } from "react";
 
@@ -29,7 +31,25 @@ export default function Home({ items }: HomeProps) {
     const { setBooksObject } = useContext(ItemsContext);
 
     useEffect(() => {
-        window.localStorage.removeItem("splash");
+        localStorage.removeItem("splash");
+
+        const getUser = async () => {
+            const userCookie = localStorage.getItem("user");
+
+            if (userCookie) {
+                const localUser = JSON.parse(userCookie);
+                const sanityUser = await getUserByCondition({
+                    id: localUser.id,
+                });
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(sanityUserToLocalUser(sanityUser))
+                );
+            }
+        };
+
+        getUser();
     }, []);
 
     // set the context

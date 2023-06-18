@@ -1,6 +1,12 @@
 import { CartItemProps } from "@/context/items/itemsContextProvider";
 
 const getTotalPrice = (cartItems: CartItemProps[]) => {
+    if (!cartItems)
+        return {
+            itemsCount: 0,
+            totalPrice: 0,
+        };
+
     const totalSum = cartItems.reduce(
         (state, item) => {
             if (item && item.quantity && item.item && item.item.currentPrice) {

@@ -9,7 +9,7 @@ export default function Wishlist() {
 
     return (
         <Stack alignItems="center">
-            <WishlistBox whishList={wishlistItems} />
+            <WishlistBox wishlist={wishlistItems} />
             <YouMayAlsoLike />
         </Stack>
     );

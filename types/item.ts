@@ -1,6 +1,5 @@
 import { Author } from "./author";
 import { Category } from "./category";
-import { Review } from "./review";
 
 export type Item = {
     _id: string;
@@ -22,4 +21,9 @@ export type Item = {
             url: string;
         };
     }[];
+};
+
+export type CartItem = {
+    item: Item;
+    quantity: number;
 };

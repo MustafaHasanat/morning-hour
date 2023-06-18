@@ -1,16 +1,24 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Item } from "@/types/item";
+import { CartItem, Item } from "@/types/item";
 import StarIcon from "@mui/icons-material/Star";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Review } from "@/types/review";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+    addToCart,
+    addToWishlist,
+    changeQuantCartItem,
+    removeFromWishlist,
+} from "@/utils/sanity/user";
+import { User } from "@/types/user";
 import { ItemsContext } from "@/context/items/itemsContext";
 
 interface DetailsBoxProps {
     item: Item;
     reviews: Review[];
     isFavorite: boolean;
+    user: User | null;
     setIsFavorite: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -19,44 +27,64 @@ const DetailsBox = ({
     reviews,
     isFavorite,
     setIsFavorite,
+    user,
 }: DetailsBoxProps) => {
-    const {
-        cartItems,
-        addToCartItems,
-        changeQuantCartItem,
-        addToWishlist,
-        deleteFromWishlist,
-    } = useContext(ItemsContext);
-
     const itemRating = Math.floor(
         reviews.reduce((summation, review) => {
             return summation + review.rating;
         }, 0) / reviews.length
     );
 
-    const handleCartButton = () => {
-        const matchedList = cartItems.filter((cartItem) => {
-            if (cartItem.item._id === item._id) {
-                return cartItem;
+    const { cartItems } = useContext(ItemsContext);
+    const [cartItem, setCartItem] = useState<CartItem>(
+        cartItems.filter((cartItemObj) => {
+            if (cartItemObj.item._id === item._id) {
+                return cartItemObj;
             }
-        });
+        })[0]
+    );
 
-        if (matchedList.length === 0) {
-            addToCartItems({ item, quantity: 1 });
-        } else {
-            changeQuantCartItem(item._id, "+");
+    const handleCartButton = () => {
+        if (user) {
+            const matchedList = cartItems.filter((cartItem) => {
+                if (cartItem.item._id === item._id) {
+                    return cartItem;
+                }
+            });
+
+            if (matchedList.length === 0) {
+                addToCart({
+                    userId: user._id,
+                    itemId: `${item?._id}`,
+                });
+            } else {
+                changeQuantCartItem({
+                    userId: user._id,
+                    itemId: `${item._id}`,
+                    sign: "+",
+                    curQuant: cartItem.quantity,
+                });
+            }
         }
     };
 
     const handleFavoriteButton = () => {
-        if (isFavorite) {
-            // remove the item from wishlist
-            setIsFavorite(false);
-            deleteFromWishlist(item._id);
-        } else {
-            // add the item to wishlist
-            setIsFavorite(true);
-            addToWishlist(item);
+        if (user) {
+            if (isFavorite) {
+                // remove the item from wishlist
+                setIsFavorite(false);
+                removeFromWishlist({
+                    userId: user._id,
+                    itemId: `${item?._id}`,
+                });
+            } else {
+                // add the item to wishlist
+                setIsFavorite(true);
+                addToWishlist({
+                    userId: user._id,
+                    itemId: `${item?._id}`,
+                });
+            }
         }
     };
 

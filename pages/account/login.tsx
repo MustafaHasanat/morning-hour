@@ -8,11 +8,12 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import { getUserByCondition } from "@/utils/sanity/user";
-import SnackbarWrapper from "@/components/shared/snackbarWrapper";
 import { useRouter } from "next/router";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
 
 interface FormData {
     email: string;
@@ -21,9 +22,8 @@ interface FormData {
 
 export default function Login() {
     const lgScreen = useMediaQuery("(min-width:1440px)");
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-    const [snackbarMsg, setSnackbarMsg] = useState("");
     const router = useRouter();
+    const { setIsSnackbarOpen, setSnackbarMsg } = useContext(PageVarsContext);
 
     const [formData, setFormData] = useState<FormData>({
         email: "",
@@ -61,18 +61,10 @@ export default function Login() {
             return;
         }
 
-        const userObj = {
-            id: sanityUser._id,
-            userName: sanityUser.userName,
-            email: sanityUser.email,
-            avatar: {
-                asset: {
-                    url: sanityUser.avatar.asset.url || "/person.jpg",
-                },
-            },
-        };
+        const userObj = sanityUserToLocalUser(sanityUser);
 
         window.localStorage.setItem("user", JSON.stringify(userObj));
+        window.localStorage.setItem("userId", sanityUser._id);
         router.push("/account/splash");
     };
 
@@ -175,13 +167,6 @@ export default function Login() {
                     <GoogleIcon sx={{ ml: { xs: 2 } }} />
                 </Button>
             </Stack>
-
-            <SnackbarWrapper
-                isOpen={isSnackbarOpen}
-                setIsOpen={setIsSnackbarOpen}
-                severity="error"
-                text={snackbarMsg}
-            />
         </Stack>
     );
 }
