@@ -34,12 +34,12 @@ const WishlistBox = ({ wishlist }: { wishlist: Item[] }) => {
                 color="primary"
                 textTransform="capitalize"
             >
-                {filteredItems.length !== 0
+                {filteredItems?.length !== 0
                     ? "your wishlist items"
                     : "your wishlist is empty!"}
             </Typography>
 
-            {filteredItems.length === 0 ? (
+            {filteredItems?.length === 0 ? (
                 <Stack mb={5} spacing={5} alignItems="center">
                     <Typography fontSize={{ xs: "1.5rem" }} color="secondary">
                         go add some items to your wishlist

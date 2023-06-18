@@ -5,11 +5,11 @@ import { Stack } from "@mui/material";
 import { useContext } from "react";
 
 export default function Wishlist() {
-    const { wishlistItems } = useContext(ItemsContext);
+    const { wishlist } = useContext(ItemsContext);
 
     return (
         <Stack alignItems="center">
-            <WishlistBox wishlist={wishlistItems} />
+            <WishlistBox wishlist={wishlist} />
             <YouMayAlsoLike />
         </Stack>
     );
