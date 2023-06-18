@@ -2,9 +2,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { useRouter } from "next/router";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import { CartItem } from "@/types/item";
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
 import MiniCardCheckout from "./miniCardCheckout";
 import { ItemsContext } from "@/context/items/itemsContext";
@@ -14,7 +12,6 @@ const CheckoutPage = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [paymentIsOpen, setPaymentIsOpen] = useState(false);
     const { cartItems, setCartItems } = useContext(ItemsContext);
-    const router = useRouter();
 
     const handleClearButton = () => {
         setCartItems([]);
@@ -27,21 +24,24 @@ const CheckoutPage = () => {
     }, [cartItems]);
 
     return (
-        <>
+        <Stack alignItems="center">
             <Stack width="100%">
                 {cartItems.map((item, index) => {
                     return (
                         <Fragment
                             key={`cart mini cards header container number ${index}`}
                         >
-                            <MiniCardCheckout cartItem={item} />
+                            <MiniCardCheckout
+                                cartItem={item}
+                                paymentIsOpen={paymentIsOpen}
+                            />
                         </Fragment>
                     );
                 })}
             </Stack>
 
             {cartItems.length !== 0 ? (
-                <>
+                <Stack alignItems="center" width="100%">
                     <Stack direction="row" py={{ xs: 2 }} spacing={3}>
                         <Typography
                             textTransform="capitalize"
@@ -59,6 +59,7 @@ const CheckoutPage = () => {
 
                     <Button
                         variant="outlined"
+                        disabled={paymentIsOpen}
                         endIcon={
                             <DeleteRoundedIcon
                                 sx={{
@@ -106,7 +107,7 @@ const CheckoutPage = () => {
                             payment
                         </Button>
                     )}
-                </>
+                </Stack>
             ) : (
                 <AutoAwesomeIcon
                     color="primary"
@@ -117,7 +118,7 @@ const CheckoutPage = () => {
                     }}
                 />
             )}
-        </>
+        </Stack>
     );
 };
 

@@ -4,14 +4,55 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomDivider from "../shared/customDivider";
 import { CartItem } from "@/types/item";
+import useUserData from "@/hooks/useUserData";
+import { useContext } from "react";
+import { ItemsContext } from "@/context/items/itemsContext";
+import { changeQuantCartItem, removeFromCart } from "@/utils/sanity/user";
+import { motion } from "framer-motion";
 
 interface MiniCardProps {
     cartItem: CartItem;
+    paymentIsOpen: boolean;
 }
 
-const MiniCardCheckout = ({ cartItem }: MiniCardProps) => {
+const MiniCardCheckout = ({ cartItem, paymentIsOpen }: MiniCardProps) => {
+    const user = useUserData();
+    const { setCartItems, cartItems } = useContext(ItemsContext);
+
     const handleRemove = () => {
-        // removeItemFromCart(cartItem.item._id);
+        if (user) {
+            setCartItems(
+                cartItems.filter((item: CartItem) => {
+                    if (item.item._id !== cartItem.item._id) {
+                        return cartItems;
+                    }
+                })
+            );
+            removeFromCart({
+                userId: user?._id,
+                itemId: `${cartItem.item._id}`,
+            });
+        }
+    };
+
+    const handleChangeQuant = (sign: "+" | "-") => {
+        if (user) {
+            if (sign === "+") {
+                changeQuantCartItem({
+                    userId: user._id,
+                    itemId: `${cartItem.item._id}`,
+                    sign: "+",
+                    curQuant: cartItem.quantity,
+                });
+            } else {
+                changeQuantCartItem({
+                    userId: user._id,
+                    itemId: `${cartItem.item._id}`,
+                    sign: "-",
+                    curQuant: cartItem.quantity,
+                });
+            }
+        }
     };
 
     const textPair = (key: string, value: string) => {
@@ -34,24 +75,25 @@ const MiniCardCheckout = ({ cartItem }: MiniCardProps) => {
         );
     };
 
-    const quantButton = (sign: string) => {
+    const quantButton = (sign: "+" | "-") => {
         return (
             <Box
-                component="div"
+                component={motion.button}
+                initial={{ scale: 1 }}
+                whileHover={{ scale: paymentIsOpen ? 1 : 1.2 }}
+                whileTap={{ scale: paymentIsOpen ? 1 : 0.7 }}
+                disabled={paymentIsOpen}
                 sx={{
-                    cursor: "pointer",
+                    cursor: paymentIsOpen ? "unset" : "pointer",
                     transition: "0.3s ease",
-                    bgcolor: "background.paper",
+                    bgcolor: "transparent",
                     borderRadius: "50%",
                     width: "40px",
-                    height: "40px",
+                    aspectRatio: "1 / 1",
+                    border: 0,
                 }}
                 onClick={() => {
-                    if (sign === "+") {
-                        // updateCartItem(cartItem.item._id, "+");
-                    } else {
-                        // updateCartItem(cartItem.item._id, "-");
-                    }
+                    handleChangeQuant(sign);
                 }}
             >
                 {sign === "+" ? (
@@ -123,6 +165,7 @@ const MiniCardCheckout = ({ cartItem }: MiniCardProps) => {
 
             <Button
                 variant="outlined"
+                disabled={paymentIsOpen}
                 endIcon={<ClearIcon />}
                 sx={{
                     my: 1,

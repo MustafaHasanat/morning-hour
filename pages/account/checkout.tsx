@@ -2,7 +2,6 @@ import CheckoutPage from "@/components/checkoutPage";
 import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import useUserData from "@/hooks/useUserData";
-import { clearCart } from "@/utils/sanity/user";
 import { Stack } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 
@@ -13,7 +12,6 @@ export default function Checkout() {
 
     useEffect(() => {
         if (user && user.cart && user._id && !updated) {
-            clearCart({ userId: user._id });
             setCartItems(user.cart);
             setUpdated(true);
         }

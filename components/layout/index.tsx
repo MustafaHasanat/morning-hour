@@ -6,6 +6,7 @@ import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import DialogBox from "./dialogBox";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import Script from "next/script";
 
 interface LayoutComponentProps {
     children: JSX.Element;
@@ -45,6 +46,10 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
 
     return (
         <Box bgcolor="white" id="layout-box">
+            <Script
+                src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
+            ></Script>
+
             <HeadTag />
             <Header />
             <DialogBox />

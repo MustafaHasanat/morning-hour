@@ -33,6 +33,26 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
         }
     };
 
+    const handleChangeQuant = (sign: "+" | "-") => {
+        if (user) {
+            if (sign === "+") {
+                changeQuantCartItem({
+                    userId: user._id,
+                    itemId: `${cartItem.item._id}`,
+                    sign: "+",
+                    curQuant: cartItem.quantity,
+                });
+            } else {
+                changeQuantCartItem({
+                    userId: user._id,
+                    itemId: `${cartItem.item._id}`,
+                    sign: "-",
+                    curQuant: cartItem.quantity,
+                });
+            }
+        }
+    };
+
     const textPair = (key: string, value: string) => {
         return (
             <Stack direction="row" spacing={1}>
@@ -48,7 +68,7 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
         );
     };
 
-    const quantButton = (sign: string) => {
+    const quantButton = (sign: "+" | "-") => {
         return (
             <Box
                 component="div"
@@ -62,23 +82,7 @@ const MiniCard = ({ cartItem }: MiniCardProps) => {
                     "&:hover": {},
                 }}
                 onClick={() => {
-                    if (user) {
-                        if (sign === "+") {
-                            changeQuantCartItem({
-                                userId: user._id,
-                                itemId: `${cartItem.item._id}`,
-                                sign: "+",
-                                curQuant: cartItem.quantity,
-                            });
-                        } else {
-                            changeQuantCartItem({
-                                userId: user._id,
-                                itemId: `${cartItem.item._id}`,
-                                sign: "-",
-                                curQuant: cartItem.quantity,
-                            });
-                        }
-                    }
+                    handleChangeQuant(sign);
                 }}
             >
                 {sign === "+" ? (

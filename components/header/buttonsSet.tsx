@@ -14,18 +14,18 @@ import useUserData from "@/hooks/useUserData";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 import { CartItem } from "@/types/item";
 import { ItemsContext } from "@/context/items/itemsContext";
+import { useRouter } from "next/router";
 
 interface ButtonsSetProps {
     setDropDownContents: Dispatch<SetStateAction<"" | "cart" | "menu">>;
 }
 
-const ButtonsSet = ({
-    setDropDownContents,
-}: ButtonsSetProps) => {
+const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
     const [cartBtnIsHovered, setCartBtnIsHovered] = useState(false);
     const { cartItems, setCartItems } = useContext(ItemsContext);
     const [menuBtn, setMenuBtn] = useState(false);
     const [updated, setUpdated] = useState(false);
+    const router = useRouter();
 
     const user = useUserData();
 
@@ -54,7 +54,8 @@ const ButtonsSet = ({
         child: ReactNode,
         onMouseEnter: () => void,
         onMouseLeave: () => void,
-        onClick: () => void
+        onClick: () => void,
+        disabled: boolean
     ) => {
         return (
             <Button
@@ -62,7 +63,9 @@ const ButtonsSet = ({
                     height: { xs: "3.5rem" },
                     width: "auto",
                     zIndex: 11,
+                    opacity: disabled ? 0.5 : 1,
                 }}
+                disabled={disabled}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
@@ -120,7 +123,8 @@ const ButtonsSet = ({
                         setSnackbarMsg("Cart is empty!");
                         setSnackbarSeverity("warning");
                     }
-                }
+                },
+                router.asPath === "/account/checkout"
             )}
 
             {headerIconWrapper(
@@ -148,7 +152,8 @@ const ButtonsSet = ({
                     setDropDownContents((prev) =>
                         prev === "menu" ? "" : "menu"
                     );
-                }
+                },
+                false
             )}
         </Stack>
     );
