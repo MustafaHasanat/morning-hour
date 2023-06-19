@@ -33,13 +33,11 @@ const ItemCard = ({ item }: ItemCardProps) => {
     const { cartItems, setCartItems, wishlist, setWishlist } =
         useContext(ItemsContext);
 
-    const [cartItem, setCartItem] = useState<CartItem>(
-        cartItems.filter((cartItemObj) => {
-            if (cartItemObj.item._id === item._id) {
-                return cartItemObj;
-            }
-        })[0]
-    );
+    const cartItem = cartItems.filter((cartItemObj) => {
+        if (cartItemObj.item._id === item._id) {
+            return cartItemObj;
+        }
+    })[0];
 
     const user = sanityUserToLocalUser(useUserData());
 
@@ -282,10 +280,6 @@ const ItemCard = ({ item }: ItemCardProps) => {
                     whileTap={{
                         opacity: 1,
                         scale: 0.6,
-                    }}
-                    transition={{
-                        type: "spring",
-                        duration: 0.6,
                     }}
                     sx={{
                         position: "absolute",

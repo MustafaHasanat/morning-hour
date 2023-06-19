@@ -82,7 +82,7 @@ export default function Home({ items }: HomeProps) {
                 <BestSellingSlider />
             </Stack>
 
-            <DiscoverItems />
+            <DiscoverItems items={items} />
         </Stack>
     );
 }

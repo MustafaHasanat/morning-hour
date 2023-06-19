@@ -14,7 +14,9 @@ const BestSellingSlider = () => {
     const gapLength = 5;
 
     const sliderKeyframes = keyframes`
-        0% { left: calc(-1 * (${cardWidth}rem * 8 + ${gapLength}rem * 7)) };
+        0% { left: calc(-1 * (${cardWidth}rem * ${
+        bestSellingBooks.length
+    } + ${gapLength}rem * ${bestSellingBooks.length - 1})) };
         100% { left: 90vw };
     `;
 
@@ -50,12 +52,7 @@ const BestSellingSlider = () => {
                     },
                 }}
             >
-                {[
-                    ...bestSellingBooks,
-                    ...bestSellingBooks,
-                    ...bestSellingBooks,
-                    ...bestSellingBooks,
-                ].map((item, index) => {
+                {bestSellingBooks.map((item, index) => {
                     return (
                         <Fragment key={`${index}`}>
                             <ItemCard item={item} />

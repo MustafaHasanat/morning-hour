@@ -1,11 +1,11 @@
 import { Item } from "@/types/item";
-import filterArrayByWord from "@/utils/helpers/filterArrayByWord";
 import { Button, Stack, Typography } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ItemCard from "../shared/itemCard";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { ItemsContext } from "@/context/items/itemsContext";
+import { filterItemsByWord } from "@/utils/helpers/filterArrayByWord";
 
 const WishlistBox = ({ wishlist }: { wishlist: Item[] }) => {
     const [filteredItems, setFilteredItems] = useState(wishlist);
@@ -13,16 +13,14 @@ const WishlistBox = ({ wishlist }: { wishlist: Item[] }) => {
 
     useEffect(() => {
         setFilteredItems(
-            filterArrayByWord({
+            filterItemsByWord({
                 array: wishlist,
-                arrayType: "item",
                 searchTerm,
             })
         );
     }, [searchTerm, wishlist]);
 
     const handleClearButton = () => {
-        localStorage.removeItem("wishlist");
         setFilteredItems([]);
     };
 
