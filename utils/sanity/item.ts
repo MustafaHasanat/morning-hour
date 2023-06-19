@@ -62,3 +62,19 @@ export async function getItemsByIds(ids: string[]): Promise<Item[]> {
         groq`*[_type == "item" && _id in ${modifiedArray}]{${itemContents}}`
     );
 }
+
+export async function getItemsGroups(condition: {
+    authorId?: string;
+    categoryId?: string;
+}): Promise<Item[]> {
+    const { authorId, categoryId } = condition;
+    const query = `${
+        authorId
+            ? `author._ref == "${authorId}"`
+            : `category._ref == "${categoryId}"`
+    }`;
+    const items = await client.fetch(
+        groq`*[_type == "item" && ${query}]{${itemContents}}`
+    );
+    return items;
+}

@@ -18,8 +18,8 @@ const ReviewStar = ({ index, starsState, dispatchStars }: ReviewStarProps) => {
                 color:
                     starsState.hoveredStar >= index + 1 ||
                     starsState.selectedStar >= index + 1
-                        ? "gold"
-                        : "gray",
+                        ? "#ffd700"
+                        : "#808080",
                 opacity:
                     starsState.hoveredStar >= index + 1 ||
                     starsState.selectedStar >= index + 1

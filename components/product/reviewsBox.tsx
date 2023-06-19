@@ -198,8 +198,8 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                                                                 Math.floor(
                                                                     review.rating
                                                                 )
-                                                                    ? "gray"
-                                                                    : "gold",
+                                                                    ? "#808080"
+                                                                    : "#ffd700",
                                                         }}
                                                     />
                                                 </Box>

@@ -36,6 +36,7 @@ const DetailsBox = ({
     );
 
     const { cartItems } = useContext(ItemsContext);
+
     const [cartItem, setCartItem] = useState<CartItem>(
         cartItems.filter((cartItemObj) => {
             if (cartItemObj.item._id === item._id) {
@@ -115,7 +116,7 @@ const DetailsBox = ({
                     <Stack direction="row">
                         {Array(5)
                             .fill(0)
-                            .map((val, index) => {
+                            .map((_, index) => {
                                 return (
                                     <Box
                                         key={`rating start for ${item.title} number ${index}`}
@@ -133,9 +134,9 @@ const DetailsBox = ({
                                                         ? 0.2
                                                         : 1,
                                                 color:
-                                                    index >= itemRating
-                                                        ? "gray"
-                                                        : "gold",
+                                                    index >= itemRating || reviews.length === 0
+                                                        ? "#808080"
+                                                        : "#ffd700",
                                             }}
                                         />
                                     </Box>

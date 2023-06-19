@@ -1,24 +1,45 @@
+import { Author } from "@/types/author";
+import { Category } from "@/types/category";
 import { Item } from "@/types/item";
 
-const filterArrayByWord = ({
+export const filterItemsByWord = ({
     array,
-    arrayType,
     searchTerm,
 }: {
     array: Item[];
-    arrayType: "item";
     searchTerm: string;
 }) => {
-    switch (arrayType) {
-        case "item":
-            return array.filter((item) => {
-                if (
-                    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-                ) {
-                    return item;
-                }
-            });
-    }
+    return array.filter((item) => {
+        if (item.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return item;
+        }
+    });
 };
 
-export default filterArrayByWord;
+export const filterAuthorsByWord = ({
+    array,
+    searchTerm,
+}: {
+    array: Author[];
+    searchTerm: string;
+}) => {
+    return array.filter((author) => {
+        if (author.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return author;
+        }
+    });
+};
+
+export const filterCategoriesByWord = ({
+    array,
+    searchTerm,
+}: {
+    array: Category[];
+    searchTerm: string;
+}) => {
+    return array.filter((category) => {
+        if (category.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return category;
+        }
+    });
+};

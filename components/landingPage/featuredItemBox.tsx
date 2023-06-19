@@ -8,7 +8,8 @@ import { useContext } from "react";
 
 const FeaturedItemBox = () => {
     const router = useRouter();
-    const { booksObject } = useContext(ItemsContext);    
+    const { booksObject } = useContext(ItemsContext);  
+      
     const featuredItem = booksObject["11ee9793-51b3-4aaa-bcab-2bde936934c2"]
 
     return (
@@ -143,6 +144,7 @@ const FeaturedItemBox = () => {
                 <Avatar
                     src={featuredItem?.image.asset.url}
                     alt="best selling book"
+                    variant="square"
                     sx={{
                         height: "100%",
                         width: "100%",
