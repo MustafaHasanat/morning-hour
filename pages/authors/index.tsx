@@ -37,7 +37,7 @@ export default function Authors({ authors }: Props) {
     }, [authors, searchTerm]);
 
     return (
-        <Stack pt={10} alignItems="center">
+        <Stack pt={10} px={5} alignItems="center">
             <TitleBox
                 title="authors list"
                 subTitle="choose your next book by your favorite author"

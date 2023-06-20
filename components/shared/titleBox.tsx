@@ -28,11 +28,16 @@ const TitleBox = ({ title, subTitle }: { title: string; subTitle: string }) => {
                 textTransform="capitalize"
                 fontSize={{ xs: "3rem" }}
                 color="primary"
+                textAlign="center"
             >
                 {title}
             </Typography>
 
-            <Typography fontSize={{ xs: "1.3rem" }} color="secondary">
+            <Typography
+                textAlign="center"
+                fontSize={{ xs: "1.3rem" }}
+                color="secondary"
+            >
                 {subTitle}
             </Typography>
         </Stack>

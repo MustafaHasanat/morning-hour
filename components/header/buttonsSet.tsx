@@ -12,7 +12,6 @@ import {
 import getTotalPrice from "@/utils/helpers/getTotalPrice";
 import useUserData from "@/hooks/useUserData";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
-import { CartItem } from "@/types/item";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { useRouter } from "next/router";
 
@@ -60,7 +59,7 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
         return (
             <Button
                 sx={{
-                    height: { xs: "3.5rem" },
+                    height: { xs: "5rem", lg: "3.5rem" },
                     width: "auto",
                     zIndex: 11,
                     opacity: disabled ? 0.5 : 1,
@@ -77,9 +76,10 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
 
     return (
         <Stack
-            direction="row"
+            direction={{ xs: "column-reverse", lg: "row" }}
             height={{ xs: "100%" }}
-            spacing={{ xs: 3 }}
+            pt={{ xs: 5, lg: 0 }}
+            spacing={{ xs: 7, lg: 3 }}
             alignItems="center"
         >
             {headerIconWrapper(
@@ -132,6 +132,10 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                     <Avatar
                         alt="user avatar"
                         src={user?.avatar ? `${user?.avatar.asset.url}` : ""}
+                        sx={{
+                            width: "auto",
+                            height: "100%",
+                        }}
                     />
                 ) : (
                     <MenuRoundedIcon

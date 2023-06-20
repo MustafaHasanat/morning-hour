@@ -52,15 +52,17 @@ interface Props {
 export default function Product({ category, books }: Props) {
     return (
         <Stack alignItems="center" pt={8}>
-            <Typography fontSize={{ xs: "3rem" }}>{category.title}</Typography>
+            <Typography fontSize={{ xs: "2rem", md: "3rem" }}>
+                {category.title}
+            </Typography>
 
             <Avatar
                 variant="rounded"
                 src={category.image.asset.url}
                 sx={{
                     borderRadius: 3,
-                    width: "20rem",
-                    height: "20rem",
+                    width: { xs: "80vw", md: "20rem" },
+                    height: { xs: "80vw", md: "20rem" },
                     mt: 3,
                     mb: 8,
                 }}

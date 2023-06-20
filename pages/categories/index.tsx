@@ -37,7 +37,7 @@ export default function Categories({ categories }: Props) {
     }, [categories, searchTerm]);
 
     return (
-        <Stack pt={10} alignItems="center">
+        <Stack pt={10} px={5} alignItems="center">
             <TitleBox
                 title="categories list"
                 subTitle="choose your next book based on your preferred genre"

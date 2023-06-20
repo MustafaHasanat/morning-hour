@@ -47,14 +47,19 @@ interface Props {
 export default function Product({ author, books }: Props) {
     return (
         <Stack alignItems="center">
-            <Stack direction="row" pt={10} pb={5} px={15}>
+            <Stack
+                direction={{ xs: "column", lg: "row" }}
+                pt={10}
+                pb={5}
+                px={15}
+            >
                 <Avatar
                     variant="rounded"
                     src={author.image.asset.url}
                     sx={{
                         borderRadius: 3,
-                        width: "20rem",
-                        height: "20rem",
+                        width: { xs: "80vw", md: "20rem" },
+                        height: { xs: "80vw", md: "20rem" },
                         mr: { lg: 5 },
                     }}
                 />

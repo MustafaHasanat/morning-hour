@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -40,7 +40,11 @@ const Navbar = () => {
     };
 
     return (
-        <Stack direction="row" spacing={2}>
+        <Stack
+            direction={{ xs: "column", lg: "row" }}
+            spacing={{ xs: 5, lg: 2 }}
+            alignItems="center"
+        >
             {navButton("home")}
             {navButton("categories")}
             {navButton("authors")}

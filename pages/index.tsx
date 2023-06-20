@@ -69,7 +69,7 @@ export default function Home({ items }: HomeProps) {
 
             <Stack
                 id="best-selling-section"
-                px={10}
+                px={{xs: 2, lg: 10}}
                 py={0}
                 mb={{ xs: 10 }}
                 alignItems="center"

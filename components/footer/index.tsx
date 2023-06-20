@@ -53,6 +53,7 @@ const Footer = () => {
                 direction={{ xs: "column", md: "row" }}
                 justifyContent={{ xs: "space-evenly" }}
                 width="100%"
+                spacing={{ xs: 5, lg: 0 }}
             >
                 <Stack spacing={2}>
                     {columnTitle("contacts")}

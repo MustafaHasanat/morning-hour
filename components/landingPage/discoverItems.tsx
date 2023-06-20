@@ -23,7 +23,7 @@ const DiscoverItems = ({ items }: { items: Item[] }) => {
     return (
         <Stack
             id="discover-items-section"
-            px={10}
+            px={{ xs: 2, lg: 10 }}
             py={5}
             mb={{ xs: 10 }}
             alignItems="center"
