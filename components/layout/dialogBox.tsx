@@ -39,7 +39,7 @@ const DialogBox = () => {
     };
 
     useEffect(() => {
-        const isLoggedIn = !!window.localStorage.getItem("user");
+        const isLoggedIn = !!localStorage.getItem("userId");
         const isAlerted = !!getCookieWithExpiry("login-alert");
 
         if (!isAlerted && !isLoggedIn) {

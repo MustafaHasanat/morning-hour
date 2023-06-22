@@ -22,8 +22,10 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
 
     const {
         setHeadTitle,
-        isSnackbarOpen,
         setIsSnackbarOpen,
+        setSnackbarMsg,
+        setSnackbarSeverity,
+        isSnackbarOpen,
         snackbarMsg,
         snackbarSeverity,
     } = useContext(PageVarsContext);
@@ -80,6 +82,8 @@ const LayoutComponent = ({ children }: LayoutComponentProps) => {
                 autoHideDuration={5000}
                 onClose={() => {
                     setIsSnackbarOpen(false);
+                    setSnackbarMsg("loading ..");
+                    setSnackbarSeverity("info");
                 }}
             >
                 <Alert

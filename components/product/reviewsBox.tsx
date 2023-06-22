@@ -16,6 +16,7 @@ import { Review } from "@/types/review";
 import StarIcon from "@mui/icons-material/Star";
 import { motion } from "framer-motion";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import useUserData from "@/hooks/useUserData";
 
 interface ReviewsBoxProps {
     item: Item;
@@ -39,6 +40,7 @@ export type ReducerActionProps =
 
 const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
     const fieldRef = useRef<HTMLInputElement | null>(null);
+    const user = useUserData();
 
     const { isSnackbarOpen, setIsSnackbarOpen, setSnackbarMsg } =
         useContext(PageVarsContext);
@@ -92,9 +94,7 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
     };
 
     const handleAddingReview = () => {
-        const localUser = localStorage.getItem("user");
-
-        if (!!!localUser) {
+        if (!!!user) {
             setSnackbarMsg(errorMsg.authenticationError);
             setIsSnackbarOpen(true);
             return;
@@ -107,14 +107,12 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
         }
 
         if (fieldRef.current) {
-            const userObj = JSON.parse(localUser);
-
             try {
                 createReview({
                     text: fieldRef.current.value,
                     rating: starsState.selectedStar,
                     itemId: item._id,
-                    userId: userObj.id,
+                    userId: user._id,
                 });
 
                 setSnackbarMsg(successMsg);

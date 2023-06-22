@@ -10,7 +10,7 @@ const PageVarsContextProvider = ({ children }: Props) => {
     const [headTitle, setHeadTitle] = useState<string>("Morning Hour");
     
     const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
-    const [snackbarMsg, setSnackbarMsg] = useState<string>("");
+    const [snackbarMsg, setSnackbarMsg] = useState<string>("loading ..");
     const [snackbarSeverity, setSnackbarSeverity] =
         useState<AlertColor>("info");
 

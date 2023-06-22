@@ -61,10 +61,7 @@ export default function Login() {
             return;
         }
 
-        const userObj = sanityUserToLocalUser(sanityUser);
-
-        window.localStorage.setItem("user", JSON.stringify(userObj));
-        window.localStorage.setItem("userId", sanityUser._id);
+        localStorage.setItem("userId", sanityUser._id);
         router.push("/account/splash");
     };
 

@@ -124,14 +124,14 @@ const ButtonsSet = ({ setDropDownContents }: ButtonsSetProps) => {
                         setSnackbarSeverity("warning");
                     }
                 },
-                router.asPath === "/account/checkout"
+                router.asPath === "/account/checkout" || !user
             )}
 
             {headerIconWrapper(
                 user ? (
                     <Avatar
                         alt="user avatar"
-                        src={user?.avatar ? `${user?.avatar.asset.url}` : ""}
+                        src={user?.avatar ? `${user?.avatar.asset.url}` : "person.jpg"}
                         sx={{
                             width: "auto",
                             height: "100%",
