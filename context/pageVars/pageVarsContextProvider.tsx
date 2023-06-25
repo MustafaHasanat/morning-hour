@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
 import { PageVarsContext } from "./pageVarsContext";
-import { AlertColor } from "@mui/material";
+import { AlertColor, PaletteMode } from "@mui/material";
 
 type Props = {
     children: ReactNode;
@@ -8,7 +8,17 @@ type Props = {
 
 const PageVarsContextProvider = ({ children }: Props) => {
     const [headTitle, setHeadTitle] = useState<string>("Morning Hour");
-    
+
+    // theme mode
+    const [themeMode, setThemeMode] = useState<PaletteMode>("light");
+    const toggleColorMode = useMemo(
+        () => () =>
+            setThemeMode((prevMode: PaletteMode) =>
+                prevMode === "light" ? "dark" : "light"
+            ),
+        []
+    );
+
     const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
     const [snackbarMsg, setSnackbarMsg] = useState<string>("loading ..");
     const [snackbarSeverity, setSnackbarSeverity] =
@@ -24,8 +34,18 @@ const PageVarsContextProvider = ({ children }: Props) => {
             setSnackbarMsg,
             snackbarSeverity,
             setSnackbarSeverity,
+            themeMode,
+            toggleColorMode,
+            setThemeMode,
         }),
-        [headTitle, isSnackbarOpen, snackbarMsg, snackbarSeverity]
+        [
+            headTitle,
+            isSnackbarOpen,
+            snackbarMsg,
+            snackbarSeverity,
+            themeMode,
+            toggleColorMode,
+        ]
     );
 
     return (

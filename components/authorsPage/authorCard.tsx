@@ -1,5 +1,4 @@
-import theme from "@/styles/theme";
-import { Avatar, Stack, Typography } from "@mui/material";
+import { Avatar, Stack, Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 import { Author } from "@/types/author";
@@ -10,6 +9,7 @@ interface Props {
 
 const AuthorCard = ({ author }: Props) => {
     const router = useRouter();
+    const theme = useTheme();
 
     return (
         <Stack

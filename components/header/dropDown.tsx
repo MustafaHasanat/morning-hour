@@ -1,5 +1,4 @@
-import theme from "@/styles/theme";
-import { Stack } from "@mui/material";
+import { Stack, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import MenuContents from "./menuContents";
 import CartContents from "./cartContents";
@@ -20,6 +19,7 @@ const DropDown = ({
     setDropDownContents,
 }: DropDownProps) => {
     const router = useRouter();
+    const theme = useTheme();
 
     useEffect(() => {
         setDropDownContents("");

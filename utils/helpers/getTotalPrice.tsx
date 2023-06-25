@@ -1,6 +1,6 @@
-import { CartItemProps } from "@/context/items/itemsContextProvider";
+import { CartItem } from "@/types/item";
 
-const getTotalPrice = (cartItems: CartItemProps[]) => {
+const getTotalPrice = (cartItems: CartItem[]) => {
     if (!cartItems)
         return {
             itemsCount: 0,

@@ -1,5 +1,4 @@
-import theme from "@/styles/theme";
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import Navbar from "../header/navbar";
 import { Dispatch, SetStateAction } from "react";
@@ -16,6 +15,8 @@ const Drawer = ({
     dropDownContents,
     setDropDownContents,
 }: Props) => {
+    const theme = useTheme();
+
     return (
         <Stack
             component={motion.div}

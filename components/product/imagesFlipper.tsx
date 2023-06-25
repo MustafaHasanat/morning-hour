@@ -1,6 +1,5 @@
-import { Avatar, Stack, Typography } from "@mui/material";
+import { Avatar, Stack, Typography, useTheme } from "@mui/material";
 import { Item } from "@/types/item";
-import theme from "@/styles/theme";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -11,6 +10,7 @@ interface ImagesFlipperProps {
 
 const ImagesFlipper = ({ item, isFavorite }: ImagesFlipperProps) => {
     const [sliderShift, setSliderShift] = useState(0);
+    const theme = useTheme();
 
     const imageSize = 23;
     const thumbnailSize = 4;

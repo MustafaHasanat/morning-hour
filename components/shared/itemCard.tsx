@@ -1,6 +1,5 @@
-import theme from "@/styles/theme";
 import { CartItem, Item } from "@/types/item";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import ExpandedWidget from "./expandedWidget";
@@ -29,6 +28,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [isInCart, setIsInCart] = useState(false);
     const [updated, setUpdated] = useState(false);
+    const theme = useTheme();
 
     const { cartItems, setCartItems, wishlist, setWishlist } =
         useContext(ItemsContext);

@@ -7,6 +7,11 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
+  i18n: {
+    locales: ['en', 'ar'],
+    defaultLocale: 'en',
+  },
+
   images: {
     domains: ['cdn.sanity.io'],
 

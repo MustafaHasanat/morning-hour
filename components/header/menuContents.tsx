@@ -9,8 +9,9 @@ import {
     Stack,
     Switch,
     Typography,
+    useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -21,11 +22,14 @@ import { signOut } from "next-auth/react";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import useUserData from "@/hooks/useUserData";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 
 const MenuContents = () => {
-    const [language, setLanguage] = useState("english");
     const router = useRouter();
+    const { locale } = router;
     const user = useUserData();
+    const theme = useTheme();
+    const { toggleColorMode, themeMode } = useContext(PageVarsContext);
 
     return (
         <List
@@ -39,29 +43,45 @@ const MenuContents = () => {
                 textTransform="capitalize"
             >
                 <Typography>dark mode</Typography>
-                <Switch />
+                <Switch
+                    onClick={() => {
+                        if (themeMode === "light") {
+                            localStorage.setItem("colorMode", "dark");
+                        } else {
+                            localStorage.setItem("colorMode", "light");
+                        }
+                        toggleColorMode();
+                    }}
+                />
             </Stack>
 
             <CustomDivider />
 
             <FormControl sx={{ width: "100%" }}>
-                <FormLabel>Language</FormLabel>
+                <FormLabel
+                    sx={{
+                        color: theme.palette.primary.main,
+                    }}
+                >
+                    Language
+                </FormLabel>
+
                 <RadioGroup
                     sx={{
                         alignItems: "center",
                     }}
-                    value={language}
+                    value={locale}
                     onChange={(event) => {
-                        setLanguage((event.target as HTMLInputElement).value);
+                        router.push("/", "/", { locale: event.target.value });
                     }}
                 >
                     <FormControlLabel
-                        value="english"
+                        value="en"
                         control={<Radio />}
                         label="English"
                     />
                     <FormControlLabel
-                        value="arabic"
+                        value="ar"
                         control={<Radio />}
                         label="Arabic"
                     />

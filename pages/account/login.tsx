@@ -1,4 +1,3 @@
-import theme from "@/styles/theme";
 import {
     Button,
     Divider,
@@ -6,6 +5,7 @@ import {
     TextField,
     Typography,
     useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
@@ -23,6 +23,7 @@ interface FormData {
 export default function Login() {
     const lgScreen = useMediaQuery("(min-width:1440px)");
     const router = useRouter();
+    const theme = useTheme();
     const { setIsSnackbarOpen, setSnackbarMsg } = useContext(PageVarsContext);
 
     const [formData, setFormData] = useState<FormData>({
