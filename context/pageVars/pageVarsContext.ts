@@ -1,9 +1,12 @@
-import { AlertColor } from "@mui/material";
+import { AlertColor, PaletteMode } from "@mui/material";
 import { Context, createContext } from "react";
 
 export interface PageVarsContextProps {
     headTitle: string;
     setHeadTitle: (headTitle: string) => void;
+    themeMode: PaletteMode;
+    toggleColorMode: () => void;
+    setThemeMode: (themeMode: PaletteMode) => void;
     isSnackbarOpen: boolean;
     setIsSnackbarOpen: (isSnackbarOpen: boolean) => void;
     snackbarMsg: string;
@@ -15,6 +18,9 @@ export interface PageVarsContextProps {
 export const PageVarsContext: Context<PageVarsContextProps> = createContext({
     headTitle: "",
     setHeadTitle: (headTitle: string) => {},
+    themeMode: "light",
+    toggleColorMode: () => {},
+    setThemeMode: (themeMode: PaletteMode) => {},
     isSnackbarOpen: false,
     setIsSnackbarOpen: (isSnackbarOpen: boolean) => {},
     snackbarMsg: "",

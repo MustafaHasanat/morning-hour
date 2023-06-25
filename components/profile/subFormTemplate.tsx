@@ -1,6 +1,4 @@
-import theme from "@/styles/theme";
 import {
-    Box,
     Button,
     FormControlLabel,
     Radio,
@@ -9,11 +7,11 @@ import {
     Stack,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
 import CustomDivider from "../shared/customDivider";
-import { ChangeEvent } from "react";
-import { User } from "@/types/user";
 import { FormDataProps, UserFieldProps } from "@/pages/account/profile";
+import { User } from "@/types/user";
 
 interface Props {
     title: string;
@@ -44,6 +42,8 @@ const SubFormTemplate = ({
         | "password"
         | "confirmedPassword"
     )[] = ["currentPassword", "password", "confirmedPassword"];
+
+    const theme = useTheme();
 
     const componentContent = () => {
         switch (name) {

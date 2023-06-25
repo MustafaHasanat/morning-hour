@@ -1,7 +1,6 @@
-import theme from "@/styles/theme";
 import { User } from "@/types/user";
 import { deleteUser } from "@/utils/sanity/user";
-import { Button } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -11,6 +10,7 @@ interface Props {
 
 const DeleteButton = ({ user }: Props) => {
     const router = useRouter();
+    const theme = useTheme();
 
     return (
         <Button

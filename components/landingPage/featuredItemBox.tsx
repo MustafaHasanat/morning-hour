@@ -1,4 +1,3 @@
-import theme from "@/styles/theme";
 import {
     Avatar,
     Box,
@@ -6,17 +5,21 @@ import {
     Stack,
     Typography,
     useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { useContext } from "react";
+import useTranslation from "@/hooks/useTranslation";
 
 const FeaturedItemBox = () => {
     const router = useRouter();
     const { booksObject } = useContext(ItemsContext);
     const lgScreen = useMediaQuery("(min-width:1440px)");
+    const theme = useTheme();
+    const { t } = useTranslation();
 
     const featuredItem = booksObject["11ee9793-51b3-4aaa-bcab-2bde936934c2"];
 
@@ -51,7 +54,7 @@ const FeaturedItemBox = () => {
                         textTransform="capitalize"
                         textAlign={{ xs: "center", lg: "left" }}
                     >
-                        book of the morning
+                        {t("landing.featured.title")}
                     </Typography>
 
                     <Typography

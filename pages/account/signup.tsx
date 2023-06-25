@@ -1,4 +1,3 @@
-import theme from "@/styles/theme";
 import {
     Button,
     Divider,
@@ -7,6 +6,7 @@ import {
     TextField,
     Typography,
     useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -41,6 +41,7 @@ export type ReducerActionProps =
 export default function SignUp() {
     const router = useRouter();
     const lgScreen = useMediaQuery("(min-width:1440px)");
+    const theme = useTheme();
 
     const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =
         useContext(PageVarsContext);

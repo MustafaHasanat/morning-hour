@@ -11,7 +11,6 @@ const DiscoverItems = ({ items }: { items: Item[] }) => {
     const { searchTerm } = useContext(ItemsContext);
 
     useEffect(() => {
-        // const items = itemsObjectToItemsArray(booksObject);
         setFilteredItems(
             filterItemsByWord({
                 array: items,

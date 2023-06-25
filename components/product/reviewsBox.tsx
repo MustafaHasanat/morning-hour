@@ -5,11 +5,11 @@ import {
     Stack,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import ReviewStar from "./reviewStar";
 import { Fragment, useContext, useReducer, useRef, useState } from "react";
-import theme from "@/styles/theme";
 import { createReview } from "@/utils/sanity/review";
 import { Item } from "@/types/item";
 import { Review } from "@/types/review";
@@ -41,6 +41,7 @@ export type ReducerActionProps =
 const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
     const fieldRef = useRef<HTMLInputElement | null>(null);
     const user = useUserData();
+    const theme = useTheme();
 
     const { isSnackbarOpen, setIsSnackbarOpen, setSnackbarMsg } =
         useContext(PageVarsContext);
@@ -130,7 +131,9 @@ const ReviewsBox = ({ item, reviews }: ReviewsBoxProps) => {
                 fontSize={{ xs: "2rem" }}
                 textTransform="capitalize"
             >
-                reviews
+                {reviews.length === 0
+                    ? "no reviews for this book yet ... be the first!"
+                    : "reviews"}
             </Typography>
 
             <Stack width="100%" mb={{ xs: 10 }} spacing={5}>

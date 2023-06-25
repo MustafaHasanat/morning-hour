@@ -1,5 +1,4 @@
-import theme from "@/styles/theme";
-import { Avatar, Box, Stack, useMediaQuery } from "@mui/material";
+import { Avatar, Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import React, {
     Dispatch,
     SetStateAction,
@@ -32,6 +31,7 @@ const Header = ({
     const { cartItems, setCartItems } = useContext(ItemsContext);
     const lgScreen = useMediaQuery("(min-width:1440px)");
     const user = useUserData();
+    const theme = useTheme();
 
     useEffect(() => {
         if (user && user.cart) {
