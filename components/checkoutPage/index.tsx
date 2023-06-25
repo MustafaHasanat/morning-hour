@@ -7,8 +7,13 @@ import getTotalPrice from "@/utils/helpers/getTotalPrice";
 import MiniCardCheckout from "./miniCardCheckout";
 import { ItemsContext } from "@/context/items/itemsContext";
 import Payment from "./payment";
+import { User } from "@/types/user";
 
-const CheckoutPage = () => {
+interface Props {
+    user: User | null;
+}
+
+const CheckoutPage = ({ user }: Props) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [paymentIsOpen, setPaymentIsOpen] = useState(false);
     const { cartItems, setCartItems } = useContext(ItemsContext);
@@ -34,6 +39,7 @@ const CheckoutPage = () => {
                             <MiniCardCheckout
                                 cartItem={item}
                                 paymentIsOpen={paymentIsOpen}
+                                user={user}
                             />
                         </Fragment>
                     );

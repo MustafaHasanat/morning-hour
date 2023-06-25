@@ -1,20 +1,36 @@
 import theme from "@/styles/theme";
-import { Avatar, Stack } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import { Avatar, Box, Stack, useMediaQuery } from "@mui/material";
+import React, {
+    Dispatch,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import DropDown from "./dropDown";
 import Navbar from "./navbar";
 import ButtonsSet from "./buttonsSet";
-import SearchBox from "./searchBox";
+import SearchBox from "../shared/searchBox";
 import Link from "next/link";
 import useUserData from "@/hooks/useUserData";
 import { ItemsContext } from "@/context/items/itemsContext";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 
-const Header = () => {
+interface Props {
+    setDrawerIsOpen: Dispatch<SetStateAction<boolean>>;
+    drawerIsOpen: boolean;
+    dropDownContents: "" | "menu" | "cart";
+    setDropDownContents: Dispatch<SetStateAction<"" | "cart" | "menu">>;
+}
+
+const Header = ({
+    drawerIsOpen,
+    setDrawerIsOpen,
+    dropDownContents,
+    setDropDownContents,
+}: Props) => {
     const { cartItems, setCartItems } = useContext(ItemsContext);
-    const [dropDownContents, setDropDownContents] = useState<
-        "cart" | "menu" | ""
-    >("");
-
+    const lgScreen = useMediaQuery("(min-width:1440px)");
     const user = useUserData();
 
     useEffect(() => {
@@ -27,7 +43,7 @@ const Header = () => {
         if (cartItems && cartItems.length === 0) {
             setDropDownContents("");
         }
-    }, [cartItems]);
+    }, [cartItems, setDropDownContents]);
 
     return (
         <Stack
@@ -45,15 +61,16 @@ const Header = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 boxShadow={`0px -5px 20px 1px ${theme.palette.primary.main}`}
-                px={{ xs: 5 }}
+                px={{ xs: 2, lg: 5 }}
                 zIndex={10}
             >
-                <DropDown
-                    isOpen={dropDownContents !== ""}
-                    contents={dropDownContents}
-                    setDropDownContents={setDropDownContents}
-                />
-
+                {lgScreen && (
+                    <DropDown
+                        isOpen={dropDownContents !== ""}
+                        contents={dropDownContents}
+                        setDropDownContents={setDropDownContents}
+                    />
+                )}
                 <Stack direction="row" spacing={5} alignItems="center">
                     <Link href="/">
                         <Avatar
@@ -67,13 +84,35 @@ const Header = () => {
                         />
                     </Link>
 
-                    <SearchBox />
+                    {lgScreen && <SearchBox />}
                 </Stack>
 
-                <Stack direction="row" spacing={10} alignItems="center">
-                    <Navbar />
-                    <ButtonsSet setDropDownContents={setDropDownContents} />
-                </Stack>
+                {lgScreen ? (
+                    <Stack direction="row" spacing={10} alignItems="center">
+                        <Navbar />
+                        <ButtonsSet setDropDownContents={setDropDownContents} />
+                    </Stack>
+                ) : (
+                    <Box
+                        component="div"
+                        onClick={() => {
+                            setDrawerIsOpen((prev) => !prev);
+                        }}
+                        sx={{
+                            color: "secondary.main",
+                            height: "50%",
+                            width: "auto",
+                        }}
+                    >
+                        <MenuRoundedIcon
+                            sx={{
+                                color: "secondary.main",
+                                height: "100%",
+                                width: "auto",
+                            }}
+                        />
+                    </Box>
+                )}
             </Stack>
         </Stack>
     );

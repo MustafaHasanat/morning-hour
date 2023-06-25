@@ -11,7 +11,9 @@ const sanityUserToLocalUser = (sanityUser: User | null): LocalUser => {
             isAdmin: sanityUser.isAdmin || false,
             avatar: {
                 asset: {
-                    url: sanityUser.avatar.asset.url || "/person.jpg",
+                    url:
+                        (sanityUser.avatar && sanityUser.avatar.asset.url) ||
+                        "/person.jpg",
                 },
             },
             wishlist: sanityUser.wishlist

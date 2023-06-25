@@ -4,19 +4,19 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomDivider from "../shared/customDivider";
 import { CartItem } from "@/types/item";
-import useUserData from "@/hooks/useUserData";
 import { useContext } from "react";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { changeQuantCartItem, removeFromCart } from "@/utils/sanity/user";
 import { motion } from "framer-motion";
+import { User } from "@/types/user";
 
 interface MiniCardProps {
     cartItem: CartItem;
     paymentIsOpen: boolean;
+    user: User | null;
 }
 
-const MiniCardCheckout = ({ cartItem, paymentIsOpen }: MiniCardProps) => {
-    const user = useUserData();
+const MiniCardCheckout = ({ cartItem, paymentIsOpen, user }: MiniCardProps) => {
     const { setCartItems, cartItems } = useContext(ItemsContext);
 
     const handleRemove = () => {

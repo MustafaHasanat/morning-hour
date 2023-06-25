@@ -1,6 +1,7 @@
 import { User } from "@/types/user";
 import { client } from "./client";
 import { groq } from "next-sanity";
+import { FormDataProps, UserFieldProps } from "@/pages/account/profile";
 
 const userContents = `
     _id,
@@ -8,6 +9,9 @@ const userContents = `
     phoneNumber,
     email,
     password,
+    address,
+    isAdmin,
+    gender,
     recentVisited[]->{
         _id,
         title,
@@ -67,11 +71,13 @@ const userContents = `
             },
         }[],
     },
-    address,
-    isAdmin,
     paymentMethods {
         name,
     }[],
+    pricingRange {
+        max,
+        min,
+    },
     avatar {
         asset->{
             url
@@ -99,10 +105,14 @@ export async function createUser({
     userName,
     email,
     password,
+    avatarUrl,
+    signUpType,
 }: {
     userName: string;
     email: string;
     password: string;
+    avatarUrl?: string;
+    signUpType: "google" | "local";
 }): Promise<Response> {
     try {
         return await fetch("/api/user/createUser", {
@@ -114,6 +124,8 @@ export async function createUser({
                 userName,
                 email,
                 password,
+                avatarUrl,
+                signUpType,
             }),
         });
     } catch (err: any) {
@@ -252,6 +264,45 @@ export async function clearCart({ userId }: { userId: string }) {
             body: JSON.stringify({
                 userId,
             }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function changeDetails({
+    userId,
+    userOldPass,
+    field,
+    formData,
+}: {
+    userId: string;
+    userOldPass: string;
+    field: UserFieldProps;
+    formData: FormDataProps;
+}) {
+    try {
+        return await fetch("/api/user/changeDetails", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId,
+                userOldPass,
+                field,
+                formData,
+            }),
+        });
+    } catch (err: any) {
+        return err;
+    }
+}
+
+export async function deleteUser({ userId }: { userId: string }) {
+    try {
+        return await fetch(`/api/user/deleteUser?userId=${userId}`, {
+            method: "DELETE",
         });
     } catch (err: any) {
         return err;

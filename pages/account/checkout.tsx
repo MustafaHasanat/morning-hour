@@ -2,7 +2,7 @@ import CheckoutPage from "@/components/checkoutPage";
 import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import useUserData from "@/hooks/useUserData";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 
 export default function Checkout() {
@@ -17,7 +17,19 @@ export default function Checkout() {
         }
     }, [setCartItems, user, updated]);
 
-    return (
+    return !user ? (
+        <Stack
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            height="70vh"
+            spacing={10}
+        >
+            <Typography fontSize="2rem">
+                Unauthorized, go to the main page.
+            </Typography>
+        </Stack>
+    ) : (
         <Stack px={40} py={10} alignItems="center">
             <TitleBox
                 title={
@@ -30,7 +42,7 @@ export default function Checkout() {
                 }
             />
 
-            <CheckoutPage />
+            <CheckoutPage user={user} />
         </Stack>
     );
 }

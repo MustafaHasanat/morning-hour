@@ -10,7 +10,7 @@ import {
     Switch,
     Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -18,21 +18,14 @@ import LoginIcon from "@mui/icons-material/Login";
 import CustomDivider from "../shared/customDivider";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
-import { LocalUser } from "@/types/user";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import useUserData from "@/hooks/useUserData";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const MenuContents = () => {
     const [language, setLanguage] = useState("english");
     const router = useRouter();
-
-    const [user, setUser] = useState<LocalUser | null>(null);
-
-    useEffect(() => {
-        const user = window.localStorage.getItem("user");
-        if (user) {
-            const userObj: LocalUser = JSON.parse(user);
-            setUser(userObj);
-        }
-    }, []);
+    const user = useUserData();
 
     return (
         <List
@@ -77,18 +70,46 @@ const MenuContents = () => {
 
             <CustomDivider />
 
-            <Button
-                variant="contained"
-                endIcon={<FavoriteIcon />}
-                sx={{ my: 2, width: "100%" }}
-                onClick={() => {
-                    router.push("/wishlist");
-                }}
-            >
-                whish list
-            </Button>
+            {user && (
+                <>
+                    <Button
+                        variant="contained"
+                        endIcon={<AssignmentIndIcon />}
+                        sx={{ my: 2, width: "100%" }}
+                        onClick={() => {
+                            router.push("/account/profile");
+                        }}
+                    >
+                        profile
+                    </Button>
 
-            <CustomDivider />
+                    <Button
+                        variant="contained"
+                        endIcon={<FavoriteIcon />}
+                        sx={{ my: 2, width: "100%" }}
+                        onClick={() => {
+                            router.push("/wishlist");
+                        }}
+                    >
+                        whish list
+                    </Button>
+
+                    {user.isAdmin && (
+                        <Button
+                            variant="contained"
+                            endIcon={<AdminPanelSettingsIcon />}
+                            sx={{ my: 2, width: "100%" }}
+                            onClick={() => {
+                                router.push("/admin");
+                            }}
+                        >
+                            admin dashboard
+                        </Button>
+                    )}
+
+                    <CustomDivider />
+                </>
+            )}
 
             {user ? (
                 <Button
@@ -96,8 +117,7 @@ const MenuContents = () => {
                     endIcon={<LogoutIcon />}
                     sx={{ my: 1, textTransform: "lowercase", width: "100%" }}
                     onClick={() => {
-                        window.localStorage.removeItem("user");
-                        window.localStorage.removeItem("userId");
+                        localStorage.removeItem("userId");
                         signOut();
                         router.push("/");
                     }}

@@ -1,10 +1,11 @@
 import CategoryCard from "@/components/categoryPage/categoryCard";
+import SearchBox from "@/components/shared/searchBox";
 import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { Category } from "@/types/category";
 import { filterCategoriesByWord } from "@/utils/helpers/filterArrayByWord";
 import { getAllCategories } from "@/utils/sanity/category";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 export const getStaticProps = async (): Promise<{
@@ -26,6 +27,7 @@ interface Props {
 export default function Categories({ categories }: Props) {
     const [filteredCategories, setFilteredCategories] = useState(categories);
     const { searchTerm } = useContext(ItemsContext);
+    const lgScreen = useMediaQuery("(min-width:1440px)");
 
     useEffect(() => {
         setFilteredCategories(
@@ -37,11 +39,13 @@ export default function Categories({ categories }: Props) {
     }, [categories, searchTerm]);
 
     return (
-        <Stack pt={10} alignItems="center">
+        <Stack pt={10} px={5} alignItems="center">
             <TitleBox
                 title="categories list"
                 subTitle="choose your next book based on your preferred genre"
             />
+
+            {!lgScreen && <SearchBox />}
 
             <Stack
                 pt={5}

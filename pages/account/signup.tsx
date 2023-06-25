@@ -1,9 +1,8 @@
 import theme from "@/styles/theme";
 import {
-    Alert,
     Button,
     Divider,
-    Snackbar,
+    Input,
     Stack,
     TextField,
     Typography,
@@ -12,21 +11,16 @@ import {
 import { signIn } from "next-auth/react";
 import GoogleIcon from "@mui/icons-material/Google";
 import { createUser, getUserByCondition } from "@/utils/sanity/user";
-import {
-    ChangeEvent,
-    FormEvent,
-    useContext,
-    useReducer,
-    useState,
-} from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 
-interface FormData {
+interface FormDataProps {
     userName: string;
     email: string;
     password: string;
     confirmPassword: string;
+    avatar: string;
 }
 
 export interface ReducerProps {
@@ -48,19 +42,15 @@ export default function SignUp() {
     const router = useRouter();
     const lgScreen = useMediaQuery("(min-width:1440px)");
 
-    const {
-        setIsSnackbarOpen,
-        setSnackbarMsg,
-        isSnackbarOpen,
-        snackbarMsg,
-        setSnackbarSeverity,
-    } = useContext(PageVarsContext);
+    const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =
+        useContext(PageVarsContext);
 
-    const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState<FormDataProps>({
         userName: "",
         email: "",
         password: "",
         confirmPassword: "",
+        avatar: "",
     });
 
     const { successMsg, errorMsg } = {
@@ -79,6 +69,16 @@ export default function SignUp() {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        // await fetch("/api/local/upload", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //         file: formData.avatar
+        //     }),
+        // });
 
         if (formData.password === formData.confirmPassword) {
             // check if user already exists
@@ -99,6 +99,8 @@ export default function SignUp() {
                 userName: formData.userName,
                 email: formData.email,
                 password: formData.password,
+                // avatarUrl: `${formData.avatar}`,
+                signUpType: "local",
             });
 
             // open the snackbar
@@ -108,18 +110,6 @@ export default function SignUp() {
             if (response.status === 200) {
                 setSnackbarMsg(successMsg);
                 setSnackbarSeverity("success");
-
-                // set the cookies and route to the main page
-                window.localStorage.setItem(
-                    "user",
-                    JSON.stringify({
-                        userName: formData.userName,
-                        email: formData.email,
-                        avatar: {
-                            asset: { url: "/person.jpg" },
-                        },
-                    })
-                );
 
                 const timeout = setTimeout(() => {
                     router.push("/account/splash");
@@ -159,6 +149,7 @@ export default function SignUp() {
                 >
                     Create a new account
                 </Typography>
+
                 <TextField
                     name="userName"
                     label="user name"
@@ -221,12 +212,26 @@ export default function SignUp() {
                     }}
                 />
 
+                <Input
+                    name="avatar"
+                    type="file"
+                    value={formData.avatar}
+                    onChange={handleInputChange}
+                    sx={{
+                        label: {
+                            color: theme.palette.primary.main,
+                            opacity: 0.7,
+                        },
+                    }}
+                />
+
                 <Button
                     type="submit"
                     variant="contained"
                     sx={{
                         width: "100%",
                         p: { xs: 1 },
+                        mt: { xs: 3 },
                         fontSize: { xs: "1rem" },
                     }}
                 >

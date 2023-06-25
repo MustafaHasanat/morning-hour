@@ -32,25 +32,25 @@ const Splash = () => {
 
     useEffect(() => {
         const handleUser = async () => {
+            // check if the user is logging in
             if (session && session.user && session.user.email) {
                 // check if the user exists in the database
                 const sanityUser = await getUserByCondition({
                     email: session.user.email,
                 });
 
-                var userObj;
-
                 // if the user exists, then this is a "LOGIN google" process
                 if (sanityUser) {
-                    userObj = sanityUserToLocalUser(sanityUser);
+                    // set the cookies and show a snackbar msg
+                    localStorage.setItem("userId", sanityUser._id);
 
                     setSnackbarMsg(successMsg.userLoggedIn);
                     setSnackbarSeverity("success");
-                    window.localStorage.removeItem("google-process");
+                    localStorage.removeItem("google-process");
                 } else {
                     // if not, then it is either a "SIGN-UP" or a "LOGIN" with no credentials
                     const googleProcess =
-                        window.localStorage.getItem("google-process");
+                        localStorage.getItem("google-process");
 
                     // if this is an unauthorized "LOGIN google" process, abort it
                     if (googleProcess === "login") {
@@ -62,39 +62,34 @@ const Splash = () => {
                         setSnackbarMsg(errorMsg.unauthorizedLogin);
                         setSnackbarSeverity("error");
                         setIsSnackbarOpen(true);
-                        window.localStorage.removeItem("user");
-                        window.localStorage.removeItem("userId");
-                        window.localStorage.removeItem("google-process");
-
-                        setTimeout(() => {
-                            router.push("/");
-                        }, 5000);
+                        localStorage.removeItem("userId");
+                        localStorage.removeItem("google-process");
 
                         return;
                     }
 
-                    window.localStorage.removeItem("google-process");
+                    localStorage.removeItem("google-process");
 
                     // if this is a "SIGN-UP google" process, create the user on Sanity
                     const response: Response = await createUser({
                         userName: `${session.user.name}`,
                         email: `${session.user.email}`,
                         password: "123456789",
+                        avatarUrl: `${session.user.image}`,
+                        signUpType: "google",
                     });
 
                     // if the user is created successfully:
                     if (response.status === 200) {
-                        // set the cookies and show a snackbar msg
-                        userObj = {
-                            userName: session.user.name,
-                            email: session.user.email,
-                            avatar: {
-                                asset: { url: "/person.jpg" },
-                            },
-                        };
+                        // redirect to login and show a snackbar msg
+                        setTimeout(() => {
+                            router.push("/account/login");
+                        }, 5000);
 
                         setSnackbarMsg(successMsg.userCreated);
                         setSnackbarSeverity("success");
+
+                        return;
                     } else {
                         // if there were an error upon creating the user:
                         setSnackbarMsg(errorMsg.postError);
@@ -109,33 +104,32 @@ const Splash = () => {
                     }
                 }
 
-                if (!!!window.localStorage.getItem("user")) {
+                if (!!!localStorage.getItem("userId")) {
                     setIsSnackbarOpen(true);
                 }
 
-                window.localStorage.setItem("user", JSON.stringify(userObj));
-                window.localStorage.setItem("userId", sanityUser._id);
+                localStorage.setItem("userId", sanityUser._id);
 
-                if (!!!window.localStorage.getItem("splash")) {
-                    window.localStorage.setItem("splash", "active");
-                    window.location.reload();
+                if (!!!localStorage.getItem("splash")) {
+                    localStorage.setItem("splash", "active");
+                    location.reload();
                 } else {
                     setTimeout(() => {
                         router.push("/");
                     }, 3000);
                 }
             } else {
-                const localUser = window.localStorage.getItem("user");
+                const useCookie = localStorage.getItem("userId");
 
-                if (localUser) {
+                if (useCookie) {
                     setIsSnackbarOpen(true);
                     setSnackbarMsg(successMsg.userLoggedIn);
                     setSnackbarSeverity("success");
                 }
 
-                if (!!!window.localStorage.getItem("splash")) {
-                    window.localStorage.setItem("splash", "active");
-                    window.location.reload();
+                if (!!!localStorage.getItem("splash")) {
+                    localStorage.setItem("splash", "active");
+                    location.reload();
                 } else {
                     setTimeout(() => {
                         router.push("/");
