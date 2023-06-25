@@ -1,39 +1,23 @@
-import LoadingPage from "@/components/shared/loadingPage";
 import TitleBox from "@/components/shared/titleBox";
 import useUserData from "@/hooks/useUserData";
-import { Stack } from "@mui/material";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-
-// export const getStaticProps = async (): Promise<{
-//     props: {
-//         authors: Author[];
-//     };
-// }> => {
-//     const authors = await getAllAuthors();
-
-//     return {
-//         props: { authors },
-//     };
-// };
+import { Stack, Typography } from "@mui/material";
 
 interface Props {}
 
 export default function Admin({}: Props) {
     const user = useUserData();
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!user) {
-            setTimeout(() => {
-                router.push("/");
-            }, 2000);
-        }
-    }, [user, router]);
 
     return !user ? (
-        <Stack width="100%" alignItems="center">
-            <LoadingPage message="Unauthorized, redirecting ..." />
+        <Stack
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            height="70vh"
+            spacing={10}
+        >
+            <Typography fontSize="2rem">
+                Unauthorized, go to the main page.
+            </Typography>
         </Stack>
     ) : (
         <Stack pt={10} px={5} alignItems="center">

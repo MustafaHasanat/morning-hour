@@ -7,6 +7,11 @@ export type User = {
     phoneNumber: number;
     email: string;
     password: string;
+    gender: "male" | "female";
+    pricingRange: {
+        max: number;
+        min: number;
+    };
     recentVisited: Item[];
     wishlist: Item[];
     cart: {

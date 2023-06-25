@@ -1,6 +1,7 @@
 import DiscoverItems from "@/components/landingPage/discoverItems";
 import FeaturedItemBox from "@/components/landingPage/featuredItemBox";
 import BestSellingSlider from "@/components/shared/bestSellingSlider";
+import SearchBox from "@/components/shared/searchBox";
 import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { BooksObjectProps } from "@/context/items/itemsContextProvider";
@@ -9,7 +10,7 @@ import { Item } from "@/types/item";
 import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
 import { getAllItems } from "@/utils/sanity/item";
 import { getUserByCondition } from "@/utils/sanity/user";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import { useContext, useEffect } from "react";
 
 export const getStaticProps = async (): Promise<{
@@ -30,6 +31,7 @@ interface HomeProps {
 
 export default function Home({ items }: HomeProps) {
     const { setBooksObject } = useContext(ItemsContext);
+    const lgScreen = useMediaQuery("(min-width:1440px)");
 
     useEffect(() => {
         localStorage.removeItem("splash");
@@ -47,7 +49,7 @@ export default function Home({ items }: HomeProps) {
     }, [items, setBooksObject]);
 
     return (
-        <Stack>
+        <Stack alignItems="center">
             <FeaturedItemBox />
 
             <Stack
@@ -56,6 +58,7 @@ export default function Home({ items }: HomeProps) {
                 py={0}
                 mb={{ xs: 10 }}
                 alignItems="center"
+                width="100%"
             >
                 <TitleBox
                     title="best seller books"
@@ -64,6 +67,8 @@ export default function Home({ items }: HomeProps) {
 
                 <BestSellingSlider />
             </Stack>
+
+            {!lgScreen && <SearchBox />}
 
             <DiscoverItems items={items} />
         </Stack>

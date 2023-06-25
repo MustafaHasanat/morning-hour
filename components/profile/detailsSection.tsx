@@ -1,82 +1,32 @@
-import theme from "@/styles/theme";
 import { User } from "@/types/user";
 import { Stack, Typography } from "@mui/material";
-import { ChangeEvent, useContext, useState } from "react";
-import { changeDetails } from "@/utils/sanity/user";
-import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import { ChangeEvent } from "react";
 import SubFormTemplate from "./subFormTemplate";
-
-export type UserFieldProps =
-    | "userName"
-    | "email"
-    | "password"
-    | "phoneNumber"
-    | "gender"
-    | "address";
-
-export type UserDataProps = {
-    userName: string;
-    email: string;
-    password: string;
-    phoneNumber: string;
-    gender: "male" | "female";
-    address: string;
-};
-
-export type FormDataProps = UserDataProps & {
-    currentPassword: string;
-    confirmedPassword: string;
-};
+import { FormDataProps, UserFieldProps } from "@/pages/account/profile";
 
 interface Props {
     user: User | null;
+    formData: FormDataProps;
+    handleInputChange: (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => void;
+    handleSave: (field: UserFieldProps) => Promise<void>;
 }
 
-const DetailsSection = ({ user }: Props) => {
-    const { setSnackbarMsg, setSnackbarSeverity, setIsSnackbarOpen } =
-        useContext(PageVarsContext);
-
-    const [formData, setFormData] = useState<FormDataProps>({
-        userName: "",
-        email: "",
-        phoneNumber: "",
-        gender: "male",
-        address: "",
-        currentPassword: "",
-        password: "",
-        confirmedPassword: "",
-    });
-
-    const handleInputChange = (
-        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSave = async (field: UserFieldProps) => {
-        setIsSnackbarOpen(true);
-
-        if (user && user._id) {
-            const res = await changeDetails({
-                userId: user._id,
-                userOldPass: user.password,
-                field,
-                formData,
-            });
-
-            const resData = await res.json();
-            setSnackbarSeverity(res.ok ? "success" : "error");
-            setSnackbarMsg(resData.message);
-        }
-    };
-
+const DetailsSection = ({
+    user,
+    formData,
+    handleInputChange,
+    handleSave,
+}: Props) => {
     return (
-        <Stack spacing={{ xs: 3 }}>
+        <Stack spacing={{ xs: 3 }} width="100%">
             <Typography fontSize={{ xs: "2.5rem" }} textAlign="left">
                 Change your details
             </Typography>
 
             <SubFormTemplate
+                user={user}
                 title="Username:"
                 name="userName"
                 label="New User Name"
@@ -88,6 +38,7 @@ const DetailsSection = ({ user }: Props) => {
             />
 
             <SubFormTemplate
+                user={user}
                 title="Email:"
                 name="email"
                 label="New Email"
@@ -99,6 +50,7 @@ const DetailsSection = ({ user }: Props) => {
             />
 
             <SubFormTemplate
+                user={user}
                 title="Phone Number:"
                 name="phoneNumber"
                 label="New Phone Number"
@@ -110,6 +62,7 @@ const DetailsSection = ({ user }: Props) => {
             />
 
             <SubFormTemplate
+                user={user}
                 title="Gender:"
                 name="gender"
                 label="gender"
@@ -121,6 +74,7 @@ const DetailsSection = ({ user }: Props) => {
             />
 
             <SubFormTemplate
+                user={user}
                 title="Address:"
                 name="address"
                 label="New Address"
@@ -132,6 +86,7 @@ const DetailsSection = ({ user }: Props) => {
             />
 
             <SubFormTemplate
+                user={user}
                 title="Password:"
                 name="password"
                 label="New Password"

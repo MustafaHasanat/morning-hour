@@ -1,10 +1,11 @@
 import AuthorCard from "@/components/authorsPage/authorCard";
+import SearchBox from "@/components/shared/searchBox";
 import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { Author } from "@/types/author";
 import { filterAuthorsByWord } from "@/utils/helpers/filterArrayByWord";
 import { getAllAuthors } from "@/utils/sanity/author";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 export const getStaticProps = async (): Promise<{
@@ -26,6 +27,7 @@ interface Props {
 export default function Authors({ authors }: Props) {
     const [filteredAuthors, setFilteredAuthors] = useState(authors);
     const { searchTerm } = useContext(ItemsContext);
+    const lgScreen = useMediaQuery("(min-width:1440px)");
 
     useEffect(() => {
         setFilteredAuthors(
@@ -42,6 +44,8 @@ export default function Authors({ authors }: Props) {
                 title="authors list"
                 subTitle="choose your next book by your favorite author"
             />
+
+            {!lgScreen && <SearchBox />}
 
             <Stack
                 pt={5}

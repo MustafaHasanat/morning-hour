@@ -2,7 +2,7 @@ import { Stack, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import ExpandedWidget from "../shared/expandedWidget";
+import ExpandedWidget from "./expandedWidget";
 import { ItemsContext } from "@/context/items/itemsContext";
 
 interface SearchBoxProps {}

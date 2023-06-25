@@ -1,7 +1,7 @@
 import { User } from "@/types/user";
 import { client } from "./client";
 import { groq } from "next-sanity";
-import { UserFieldProps } from "@/components/profile/detailsSection";
+import { FormDataProps, UserFieldProps } from "@/pages/account/profile";
 
 const userContents = `
     _id,
@@ -9,6 +9,9 @@ const userContents = `
     phoneNumber,
     email,
     password,
+    address,
+    isAdmin,
+    gender,
     recentVisited[]->{
         _id,
         title,
@@ -68,11 +71,13 @@ const userContents = `
             },
         }[],
     },
-    address,
-    isAdmin,
     paymentMethods {
         name,
     }[],
+    pricingRange {
+        max,
+        min,
+    },
     avatar {
         asset->{
             url
@@ -274,13 +279,7 @@ export async function changeDetails({
     userId: string;
     userOldPass: string;
     field: UserFieldProps;
-    formData: {
-        userName: string;
-        email: string;
-        currentPassword: string;
-        password: string;
-        confirmedPassword: string;
-    };
+    formData: FormDataProps;
 }) {
     try {
         return await fetch("/api/user/changeDetails", {

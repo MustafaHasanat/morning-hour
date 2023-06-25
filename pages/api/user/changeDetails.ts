@@ -8,7 +8,7 @@ export default async function changeDetails(
     const { userId, userOldPass, field, formData } = req.body;
 
     let clientObj: {
-        [key: string]: string;
+        [key: string]: string | { max: number; min: number };
     } = {};
 
     switch (field) {
@@ -40,6 +40,17 @@ export default async function changeDetails(
             break;
         case "address":
             clientObj.address = formData.address;
+            break;
+        case "pricingRange":
+            const [min, max] = formData.pricingRange;
+            clientObj.pricingRange = { min, max };
+
+            if (min > max || min < 0 || max > 100) {
+                return res.status(500).json({
+                    message:
+                        "Bad input data! .. max must be more than min and less than 100, min must be more than 0",
+                });
+            }
             break;
         case "password":
             clientObj.password = formData.password;

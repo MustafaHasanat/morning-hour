@@ -10,7 +10,7 @@ import React, {
 import DropDown from "./dropDown";
 import Navbar from "./navbar";
 import ButtonsSet from "./buttonsSet";
-import SearchBox from "./searchBox";
+import SearchBox from "../shared/searchBox";
 import Link from "next/link";
 import useUserData from "@/hooks/useUserData";
 import { ItemsContext } from "@/context/items/itemsContext";
