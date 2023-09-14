@@ -1,9 +1,5 @@
 export type Category = {
-    _id: string;
+    id: string;
     title: string;
-    image: {
-        asset: {
-            url: string;
-        };
-    };
+    image: string;
 };

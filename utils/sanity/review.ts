@@ -1,9 +1,9 @@
-import { Review } from "@/types/review";
+import { Review } from "@/typess/review";
 import { client } from "./client";
 import { groq } from "next-sanity";
 
 export async function getReviewsForItem(itemId: string): Promise<Review[]> {
-    return await client.fetch(groq`*[_type == "review" && item._ref == "${itemId}"]{
+  return await client.fetch(groq`*[_type == "review" && item._ref == "${itemId}"]{
         _id,
         text,
         rating,
@@ -22,30 +22,30 @@ export async function getReviewsForItem(itemId: string): Promise<Review[]> {
 }
 
 export async function createReview({
-    text,
-    rating,
-    itemId,
-    userId,
+  text,
+  rating,
+  itemId,
+  userId,
 }: {
-    text: string;
-    rating: number;
-    itemId: string;
-    userId: string;
+  text: string;
+  rating: number;
+  itemId: string;
+  userId: string;
 }): Promise<Response> {
-    try {
-        return await fetch("/api/review/createReview", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                text,
-                rating,
-                itemId,
-                userId,
-            }),
-        });
-    } catch (err: any) {
-        return err;
-    }
+  try {
+    return await fetch("/api/review/createReview", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text,
+        rating,
+        itemId,
+        userId,
+      }),
+    });
+  } catch (err: any) {
+    return err;
+  }
 }

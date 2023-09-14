@@ -47,10 +47,10 @@ const themeTokens = (mode: PaletteMode) => ({
     breakpoints: {
         values: {
             xs: 0,
-            sm: 425, // mobile
+            sm: 420, // mobile
             md: 768, // tablet
-            lg: 1440, // laptop
-            xl: 2560, // 4K
+            lg: 1138, // laptop
+            xl: 2550, // 4K
         },
     },
 });
