@@ -8,6 +8,7 @@ import { Stack, useMediaQuery } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
 import getCategories from "../api/categories/getcategories";
 import assets from "@/utils/constants/assets";
+import themes from "@/utils/constants/themes";
 
 export const getStaticProps = async (): Promise<{
   props: {
@@ -34,7 +35,7 @@ interface Props {
 export default function Categories({ categories }: Props) {
   const [filteredCategories, setFilteredCategories] = useState(categories);
   const { searchTerm } = useContext(ItemsContext);
-  const lgScreen = useMediaQuery("(min-width:1440px)");
+  const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
 
   useEffect(() => {
     setFilteredCategories(

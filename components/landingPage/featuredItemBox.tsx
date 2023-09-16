@@ -13,11 +13,12 @@ import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { useContext } from "react";
 import useTranslation from "@/hooks/useTranslation";
+import themes from "@/utils/constants/themes";
 
 const FeaturedItemBox = () => {
     const router = useRouter();
     const { booksObject } = useContext(ItemsContext);
-    const lgScreen = useMediaQuery("(min-width:1440px)");
+    const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
     const theme = useTheme();
     const { t } = useTranslation();
 

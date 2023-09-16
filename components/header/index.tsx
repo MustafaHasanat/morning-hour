@@ -1,11 +1,5 @@
 import { Avatar, Box, Stack, useMediaQuery, useTheme } from "@mui/material";
-import React, {
-    Dispatch,
-    SetStateAction,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import DropDown from "./dropDown";
 import Navbar from "./navbar";
 import ButtonsSet from "./buttonsSet";
@@ -14,6 +8,7 @@ import Link from "next/link";
 import useUserData from "@/hooks/useUserData";
 import { ItemsContext } from "@/context/items/itemsContext";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import themes from "@/utils/constants/themes";
 
 interface Props {
     setDrawerIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -29,7 +24,7 @@ const Header = ({
     setDropDownContents,
 }: Props) => {
     const { cartItems, setCartItems } = useContext(ItemsContext);
-    const lgScreen = useMediaQuery("(min-width:1440px)");
+    const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
     const user = useUserData();
     const theme = useTheme();
 

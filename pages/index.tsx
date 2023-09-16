@@ -6,6 +6,7 @@ import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { BooksObjectProps } from "@/context/items/itemsContextProvider";
 import { Item } from "@/typess/item";
+import themes from "@/utils/constants/themes";
 import { getAllItems } from "@/utils/sanity/item";
 import { Stack, useMediaQuery } from "@mui/material";
 import { useContext, useEffect } from "react";
@@ -28,7 +29,7 @@ interface HomeProps {
 
 export default function Home({ items }: HomeProps) {
   const { setBooksObject } = useContext(ItemsContext);
-  const lgScreen = useMediaQuery("(min-width:1440px)");
+  const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
 
   useEffect(() => {
     localStorage.removeItem("splash");

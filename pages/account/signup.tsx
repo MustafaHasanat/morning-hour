@@ -14,6 +14,7 @@ import { createUser, getUserByCondition } from "@/utils/sanity/user";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
+import themes from "@/utils/constants/themes";
 
 interface FormDataProps {
     userName: string;
@@ -40,7 +41,7 @@ export type ReducerActionProps =
 
 export default function SignUp() {
     const router = useRouter();
-    const lgScreen = useMediaQuery("(min-width:1440px)");
+    const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
     const theme = useTheme();
 
     const { setIsSnackbarOpen, setSnackbarMsg, setSnackbarSeverity } =

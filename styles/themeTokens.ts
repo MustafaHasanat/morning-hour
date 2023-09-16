@@ -1,3 +1,4 @@
+import themes from "@/utils/constants/themes";
 import { PaletteMode, createTheme } from "@mui/material";
 
 const themeTokens = (mode: PaletteMode) => ({
@@ -46,11 +47,11 @@ const themeTokens = (mode: PaletteMode) => ({
 
     breakpoints: {
         values: {
-            xs: 0,
-            sm: 420, // mobile
-            md: 768, // tablet
-            lg: 1138, // laptop
-            xl: 2550, // 4K
+            xs: themes.MEDIA_QUERIES.XS,
+            sm: themes.MEDIA_QUERIES.SM, // mobile
+            md: themes.MEDIA_QUERIES.MD, // tablet
+            lg: themes.MEDIA_QUERIES.LG, // laptop
+            xl: themes.MEDIA_QUERIES.XL, // 4K
         },
     },
 });

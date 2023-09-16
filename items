@@ -1,0 +1,80 @@
+[
+  {
+    oldPrice: 0,
+    primaryColor: '#fe5900',
+    category: { title: 'Self-help', image: [Object] },
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    title: 'The Subtle Art of not Giving a F*ck',
+    currentPrice: 20,
+    isBestSelling: true,
+    author: { name: 'Mark Manson', image: [Object] },
+    image: { asset: [Object] },
+    _id: '11ee9793-51b3-4aaa-bcab-2bde936934c2',
+    description: 'The Subtle Art of Not Giving a F*ck: A Counterintuitive Approach to Living a Good Life is a 2016 nonfiction self-help book by American blogger and author Mark Manson.'
+  },
+  {
+    image: { asset: [Object] },
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    title: 'Rich Dad Poor Dad',
+    description: "Rich Dad Poor Dad is a 1997 book written by Robert T. Kiyosaki and Sharon Lechter. It advocates the importance of financial literacy, financial independence and building wealth through investing in assets, real estate investing, starting and owning businesses, as well as increasing one's financial intelligence.",
+    currentPrice: 13,
+    isBestSelling: true,
+    category: { title: 'Entrepreneurial', image: [Object] },
+    author: { name: 'Robert Kiyosaki', image: [Object] },
+    _id: '174b290c-cad7-4872-8695-f5d44bb95fdd',
+    oldPrice: 0,
+    primaryColor: '#350a41'
+  },
+  {
+    image: { asset: [Object] },
+    description: 'The Richest Man in Babylon is a 1926 book by George S. Clason that dispenses financial advice through a collection of parables set 4,097 years ago in ancient Babylon. The book remains in print almost a century after the parables were originally published, and is regarded as a classic of personal financial advice',
+    currentPrice: 10,
+    category: { title: 'Entrepreneurial', image: [Object] },
+    author: { name: 'George Clason', image: [Object] },
+    primaryColor: '#281564',
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    _id: '5a523d59-d766-4d10-b4fd-734290b9fedc',
+    title: 'The Richest Man in Babylon',
+    oldPrice: 0,
+    isBestSelling: false
+  },
+  {
+    title: 'The 5 AM Club',
+    isBestSelling: true,
+    primaryColor: '#ed4d03',
+    author: { name: 'Robin Sharma', image: [Object] },
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    _id: '6bd39c69-5b19-4fd0-bfe6-001c9f7a909d',
+    description: 'Legendary leadership and elite performance expert Robin Sharma introduced The 5 am Club concept over twenty years ago, based on a revolutionary morning routine that has helped his clients maximize their productivity, activate their best health and bulletproof their serenity in this age of overwhelming complexity.',
+    currentPrice: 10,
+    oldPrice: 0,
+    category: { title: 'Self-help', image: [Object] },
+    image: { asset: [Object] }
+  },
+  {
+    description: '“The 5 Second Rule is simple. If you have an instinct to act on a goal, you must physically move within five seconds or your brain will kill it. The moment you feel an instinct or a desire to act on a goal or a commitment, use the Rule.”',
+    oldPrice: 0,
+    isBestSelling: true,
+    author: { name: 'Mel Robbins', image: [Object] },
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    title: 'The 5 Second Rule',
+    currentPrice: 10,
+    primaryColor: '#d1bb7f',
+    category: { title: 'Self-help', image: [Object] },
+    image: { asset: [Object] },
+    _id: 'a4d55832-cbe9-402d-a5b2-f5cf0542a79a'
+  },
+  {
+    isBestSelling: true,
+    primaryColor: '#01b8c1',
+    _id: 'a5dcd690-1282-4ac9-8814-6f33692b19e0',
+    title: 'Everything is F*cked',
+    description: 'Mark Manson is the #1 New York Times Bestselling author of Everything is F*cked: A Book About Hope and The Subtle Art of Not Giving a F*ck: A Counterintuitive Approach to Living a Good Life, the mega-bestseller that reached #1 in fourteen different countries.',
+    currentPrice: 20,
+    screenshots: [ [Object], [Object], [Object], [Object] ],
+    oldPrice: 0,
+    category: { title: 'Self-help', image: [Object] },
+    author: { name: 'Mark Manson', image: [Object] },
+    image: { asset: [Object] }
+  }
+]
