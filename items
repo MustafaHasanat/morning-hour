@@ -52,19 +52,6 @@
     image: { asset: [Object] }
   },
   {
-    description: '“The 5 Second Rule is simple. If you have an instinct to act on a goal, you must physically move within five seconds or your brain will kill it. The moment you feel an instinct or a desire to act on a goal or a commitment, use the Rule.”',
-    oldPrice: 0,
-    isBestSelling: true,
-    author: { name: 'Mel Robbins', image: [Object] },
-    screenshots: [ [Object], [Object], [Object], [Object] ],
-    title: 'The 5 Second Rule',
-    currentPrice: 10,
-    primaryColor: '#d1bb7f',
-    category: { title: 'Self-help', image: [Object] },
-    image: { asset: [Object] },
-    _id: 'a4d55832-cbe9-402d-a5b2-f5cf0542a79a'
-  },
-  {
     isBestSelling: true,
     primaryColor: '#01b8c1',
     _id: 'a5dcd690-1282-4ac9-8814-6f33692b19e0',

@@ -17,7 +17,7 @@ export const getStaticProps = async (): Promise<{
 }> => {
     const authors = await getAuthors();
 
-    const newAuthors = authors.data.data.map((author: Author) => {
+    const newAuthors = authors?.data?.data?.map((author: Author) => {
         return {
             ...author,
             image: assets.BACKEND_IMAGE_URL("authors", author.image),
@@ -25,7 +25,7 @@ export const getStaticProps = async (): Promise<{
     });
 
     return {
-        props: { authors: newAuthors },
+        props: { authors: newAuthors || [] },
     };
 };
 
