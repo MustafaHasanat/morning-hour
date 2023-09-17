@@ -1,9 +1,9 @@
-import { Order } from "@/types/order";
+import { Order } from "@/typess/order";
 import { client } from "./client";
 import { groq } from "next-sanity";
 
 export async function getAllOrders(): Promise<Order[]> {
-    return await client.fetch(groq`*[_type == "order"]{
+  return await client.fetch(groq`*[_type == "order"]{
         _id,
         user->{
             userName,

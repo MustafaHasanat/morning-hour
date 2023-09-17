@@ -16,7 +16,7 @@ import {
     setCookieWithExpiry,
 } from "@/utils/helpers/cookieHandler";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
-import globalConstants from "@/utils/constants";
+import cookies from "@/utils/constants/cookies";
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -47,7 +47,7 @@ const DialogBox = () => {
             setCookieWithExpiry(
                 "login-alert",
                 "alerted",
-                globalConstants.ONE_HOUR
+                cookies.ONE_HOUR
             );
             setDialogIsOpen(true);
         }

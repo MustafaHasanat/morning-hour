@@ -14,6 +14,7 @@ import { getUserByCondition } from "@/utils/sanity/user";
 import { useRouter } from "next/router";
 import { PageVarsContext } from "@/context/pageVars/pageVarsContext";
 import sanityUserToLocalUser from "@/utils/helpers/sanityUserToLocalUser";
+import themes from "@/utils/constants/themes";
 
 interface FormData {
     email: string;
@@ -21,7 +22,7 @@ interface FormData {
 }
 
 export default function Login() {
-    const lgScreen = useMediaQuery("(min-width:1440px)");
+    const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
     const router = useRouter();
     const theme = useTheme();
     const { setIsSnackbarOpen, setSnackbarMsg } = useContext(PageVarsContext);

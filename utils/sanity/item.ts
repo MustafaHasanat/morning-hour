@@ -1,4 +1,4 @@
-import { Item } from "@/types/item";
+import { Item } from "@/typess/item";
 import { client } from "./client";
 import { groq } from "next-sanity";
 
@@ -38,43 +38,43 @@ const itemContents = `
     }[],`;
 
 export async function getAllItems(): Promise<Item[]> {
-    return await client.fetch(groq`*[_type == "item"]{${itemContents}}`);
+  return await client.fetch(groq`*[_type == "item"]{${itemContents}}`);
 }
 
 export async function getItemByCondition(condition: {
-    id?: string;
-    title?: string;
+  id?: string;
+  title?: string;
 }): Promise<Item> {
-    const { id, title } = condition;
-    const query = `${id ? `_id == "${id}"` : `title == "${title}"`}`;
-    const item = await client.fetch(
-        groq`*[_type == "item" && ${query}]{${itemContents}}`
-    );
-    return item[0];
+  const { id, title } = condition;
+  const query = `${id ? `_id == "${id}"` : `title == "${title}"`}`;
+  const item = await client.fetch(
+    groq`*[_type == "item" && ${query}]{${itemContents}}`
+  );
+  return item[0];
 }
 
 export async function getItemsByIds(ids: string[]): Promise<Item[]> {
-    if (ids.length === 0) return [];
+  if (ids.length === 0) return [];
 
-    const modifiedArray = `["${ids.join(`", "`)}"]`;
+  const modifiedArray = `["${ids.join(`", "`)}"]`;
 
-    return await client.fetch(
-        groq`*[_type == "item" && _id in ${modifiedArray}]{${itemContents}}`
-    );
+  return await client.fetch(
+    groq`*[_type == "item" && _id in ${modifiedArray}]{${itemContents}}`
+  );
 }
 
 export async function getItemsGroups(condition: {
-    authorId?: string;
-    categoryId?: string;
+  authorId?: string;
+  categoryId?: string;
 }): Promise<Item[]> {
-    const { authorId, categoryId } = condition;
-    const query = `${
-        authorId
-            ? `author._ref == "${authorId}"`
-            : `category._ref == "${categoryId}"`
-    }`;
-    const items = await client.fetch(
-        groq`*[_type == "item" && ${query}]{${itemContents}}`
-    );
-    return items;
+  const { authorId, categoryId } = condition;
+  const query = `${
+    authorId
+      ? `author._ref == "${authorId}"`
+      : `category._ref == "${categoryId}"`
+  }`;
+  const items = await client.fetch(
+    groq`*[_type == "item" && ${query}]{${itemContents}}`
+  );
+  return items;
 }

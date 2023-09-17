@@ -1,52 +1,52 @@
 import BookPage from "@/components/product";
 import YouMayAlsoLike from "@/components/shared/youMayAlsoLike";
-import { Item } from "@/types/item";
+import { Item } from "@/typess/item";
 import { Stack } from "@mui/material";
 import { getAllItems, getItemByCondition } from "@/utils/sanity/item";
 import itemTitleSerializer from "@/utils/helpers/itemTitleSerializer";
-import { Review } from "@/types/review";
+import { Review } from "@/typess/review";
 import { getReviewsForItem } from "@/utils/sanity/review";
 
 export const getStaticPaths = async () => {
-    const items = await getAllItems();
+  const items = await getAllItems();
 
-    const paths = items.map((item) => {
-        return {
-            params: { title: itemTitleSerializer(item.title, "underscored") },
-        };
-    });
-
+  const paths = items.map((item) => {
     return {
-        paths,
-        fallback: false,
+      params: { title: itemTitleSerializer(item.title, "underscored") },
     };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
 };
 
 export const getStaticProps = async (context: {
-    params: { title: string };
+  params: { title: string };
 }): Promise<{
-    props: { item: Item; reviews: Review[] };
+  props: { item: Item; reviews: Review[] };
 }> => {
-    const title = itemTitleSerializer(context.params.title, "normal");
-    const item = await getItemByCondition({ title });
-    const reviews = await getReviewsForItem(item._id);
+  const title = itemTitleSerializer(context.params.title, "normal");
+  const item = await getItemByCondition({ title });
+  const reviews = await getReviewsForItem(item._id);
 
-    return {
-        props: { item, reviews },
-    };
+  return {
+    props: { item, reviews },
+  };
 };
 
 export default function Product({
-    item,
-    reviews,
+  item,
+  reviews,
 }: {
-    item: Item;
-    reviews: Review[];
+  item: Item;
+  reviews: Review[];
 }) {
-    return (
-        <Stack alignItems="center">
-            <BookPage item={item} reviews={reviews} />
-            <YouMayAlsoLike />
-        </Stack>
-    );
+  return (
+    <Stack alignItems="center">
+      <BookPage item={item} reviews={reviews} />
+      <YouMayAlsoLike />
+    </Stack>
+  );
 }

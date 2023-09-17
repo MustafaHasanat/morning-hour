@@ -8,21 +8,30 @@ const nextConfig = {
   },
 
   i18n: {
-    locales: ['en', 'ar'],
-    defaultLocale: 'en',
+    locales: ["en", "ar"],
+    defaultLocale: "en",
   },
 
   images: {
-    domains: ['cdn.sanity.io'],
+    domains: ["cdn.sanity.io"],
 
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
-        port: '',
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
       },
     ],
   },
-}
 
-module.exports = nextConfig
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: 'http://localhost:3000/api/:path*',
+  //     },
+  //   ];
+  // },
+};
+
+module.exports = nextConfig;

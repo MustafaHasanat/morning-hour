@@ -4,19 +4,28 @@ import TitleBox from "@/components/shared/titleBox";
 import { ItemsContext } from "@/context/items/itemsContext";
 import { Author } from "@/types/author";
 import { filterAuthorsByWord } from "@/utils/helpers/filterArrayByWord";
-import { getAllAuthors } from "@/utils/sanity/author";
 import { Stack, useMediaQuery } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
+import getAuthors from "../api/authors/getAuthors";
+import assets from "@/utils/constants/assets";
+import themes from "@/utils/constants/themes";
 
 export const getStaticProps = async (): Promise<{
     props: {
         authors: Author[];
     };
 }> => {
-    const authors = await getAllAuthors();
+    const authors = await getAuthors();
+
+    const newAuthors = authors?.data?.data?.map((author: Author) => {
+        return {
+            ...author,
+            image: assets.BACKEND_IMAGE_URL("authors", author.image),
+        };
+    });
 
     return {
-        props: { authors },
+        props: { authors: newAuthors || [] },
     };
 };
 
@@ -27,7 +36,7 @@ interface Props {
 export default function Authors({ authors }: Props) {
     const [filteredAuthors, setFilteredAuthors] = useState(authors);
     const { searchTerm } = useContext(ItemsContext);
-    const lgScreen = useMediaQuery("(min-width:1440px)");
+    const lgScreen = useMediaQuery(themes.MEDIA_QUERIES_HOOK.LG);
 
     useEffect(() => {
         setFilteredAuthors(
